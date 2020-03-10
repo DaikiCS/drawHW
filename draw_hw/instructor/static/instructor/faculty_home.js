@@ -10,9 +10,9 @@ document.getElementById("addCourseButton").onclick = function addCourse()
     if(!showA)
     {
         // edit 
-        showE = false;
-        document.querySelector(".editCourseForm").style.display = "none";
-        document.getElementById("editCourseButton").innerHTML = "Edit Course";
+        // showE = false;
+        // document.querySelector(".editCourseForm").style.display = "none";
+        // document.getElementById("editCourseButton").innerHTML = "Edit Course";
 
         document.querySelector(".addCourseForm").style.display = "block";
         document.getElementById("addCourseButton").innerHTML = "Cancel";
@@ -29,9 +29,9 @@ document.getElementById("editCourseButton").onclick = function editCourse()
     if(!showE)
     {
         //adding
-        showA = false;
-        document.querySelector(".addCourseForm").style.display = "none";
-        document.getElementById("addCourseButton").innerHTML = "Add Course";
+        // showA = false;
+        // document.querySelector(".addCourseForm").style.display = "none";
+        // document.getElementById("addCourseButton").innerHTML = "Add Course";
 
         document.querySelector(".editCourseForm").style.display = "block";
         document.getElementById("editCourseButton").innerHTML = "Cancel";

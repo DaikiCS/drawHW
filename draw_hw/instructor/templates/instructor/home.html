@@ -29,10 +29,9 @@
             </ul>
         </div>
         <div id="info">
-            <h3 style="color: black; text-align: center; background-color: lightgray;">Adding/Editing Courses</h3>
+            <h3 style="color: black; text-align: center; background-color: lightgray;">Adding Course</h3>
             
-            <button id="addCourseButton">Add Course</button> <br><br>
-            <button id="editCourseButton">Edit Course</button> <br><br>
+            <!-- <button id="addCourseButton">Add Course</button> <br><br> -->
             <form action="{% url 'instructor:instructor' %}" class="addCourseForm" method="POST">
                 {% csrf_token %}
                 
@@ -45,23 +44,6 @@
                 {% render_field c_form.description name="description" type="text" id="description" placeholder="Course Description" attr="required" %}
 
                 <input type="submit" name="submit" id="submit">
-            </form>
-
-            <form action="" class="editCourseForm" method="POST">
-                {% csrf_token %}
-                <label for="courses">Choose a Course:</label>
-
-                <select id="courses">
-                    {% for course in courses %}
-                        <option value="class1">{{ course.class_name }}</option>
-                    {% endfor %}
-                </select>
-
-                <input type="number" id="numberE" placeholder="Course ID" required>
-                <input type="text" name="classnameE" id="classnameE" placeholder="Course Name" required>
-                <input type="text" name="professorNameE" id="professorNameE" placeholder="Instructor Name" required> 
-                <input type="text" name="descriptionE" placeholder="Course Description (Optional)" id="descriptionE">
-                <input type="submit" name="submitE" id="submitE">
             </form>
         </div>
     </div>

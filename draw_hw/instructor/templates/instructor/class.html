@@ -23,7 +23,7 @@
             </ul>
         </div>
         <div id="sideNav">
-            <h3 style="margin: 0; color: black; text-align: center; background-color: lightgray;">Courses:</h3>
+            <h3 style="margin: 0; color: black; text-align: center; background-color: lightgray;">Current Course:</h3>
             <ul>
                 {% for course in courses %}
                     <li><a href="{% url 'instructor:course_detail' course.pk %}">{{ course.class_name }}</a></li>
@@ -32,15 +32,32 @@
 
         </div>
         <div id="info">
+            <h3 style="color: black; text-align: center; background-color: lightgray;">Editing Course</h3>
+            <!-- <button id="editCourseButton">Edit Course</button> <br><br> -->
 
+            <form action="" class="editCourseForm" method="POST">
+                {% csrf_token %}
+                <label for="courses">Choose a Course:</label>
+
+                <select id="courses">
+                    {% for course in courses %}
+                        <option value="class1">{{ course.class_name }}</option>
+                    {% endfor %}
+                </select>
+
+                <input type="number" id="numberE" placeholder="Course ID" required>
+                <input type="text" name="classnameE" id="classnameE" placeholder="Course Name" required>
+                <input type="text" name="professorNameE" id="professorNameE" placeholder="Instructor Name" required> 
+                <input type="text" name="descriptionE" placeholder="Course Description (Optional)" id="descriptionE">
+                <input type="submit" name="submitE" id="submitE">
+            </form>
         </div>
     </div>
     <div id="footer">
         Copyright &copy; drawHW 2020
     </div> 
 
-    <script>
-        
-    </script>
+    {% block js_tag %}<script src="{% static 'instructor/faculty_home.js' %}"></script>{% endblock %}
+    <a href="{% url 'accounts:logout' %}">Logout</a>
 
 {% endblock %}
