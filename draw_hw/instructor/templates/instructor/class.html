@@ -33,23 +33,15 @@
         </div>
         <div id="info">
             <h3 style="color: black; text-align: center; background-color: lightgray;">Editing Course</h3>
-            <!-- <button id="editCourseButton">Edit Course</button> <br><br> -->
 
-            <form action="" class="editCourseForm" method="POST">
+            <form action="{% url 'instructor:course_detail' pk %}" class="editCourseForm" method="POST">
                 {% csrf_token %}
-                <label for="courses">Choose a Course:</label>
 
-                <select id="courses">
-                    {% for course in courses %}
-                        <option value="class1">{{ course.class_name }}</option>
-                    {% endfor %}
-                </select>
+                {% render_field c_form.class_name type="text" name="classname" id="classname" placeholder="Course Name" attr="required" %}
 
-                <input type="number" id="numberE" placeholder="Course ID" required>
-                <input type="text" name="classnameE" id="classnameE" placeholder="Course Name" required>
-                <input type="text" name="professorNameE" id="professorNameE" placeholder="Instructor Name" required> 
-                <input type="text" name="descriptionE" placeholder="Course Description (Optional)" id="descriptionE">
-                <input type="submit" name="submitE" id="submitE">
+                {% render_field c_form.description name="description" type="text" id="description" placeholder="Course Description" attr="required" %}
+
+                <input type="submit" name="submit" id="submit">
             </form>
         </div>
     </div>

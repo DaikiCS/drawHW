@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import logout
 from django.urls import reverse_lazy
 from django.views import generic
@@ -18,7 +18,9 @@ def create_course(request):
     c_form = CourseForm()
     courses = Course.objects.filter(instructor=request.user)
     if request.method == 'POST':
+        request.POST = request.POST.copy() # copy post and make it mutable
         c_form = CourseForm(request.POST)
+        c_form.data["instructor"] = request.user
         if c_form.is_valid():
             c_form.save()
             return HttpResponseRedirect(reverse_lazy('instructor:instructor'))
@@ -33,9 +35,16 @@ def course_detail(request, pk):
 
     courses = Course.objects.filter(instructor=request.user)
     courses = courses.filter(pk=pk)
+    for course in courses:
+        c_form = CourseForm(instance=course) # pass current data
     if request.method == 'POST':
-        c_form = CourseForm(request.POST)
+        request.POST = request.POST.copy() # copy post and make it mutable
+        c_form = CourseForm(request.POST, instance=course) # pass user data
+        c_form.data["instructor"] = request.user
+        c_form.data["code"] = course.code
         if c_form.is_valid():
             c_form.save()
-            return HttpResponseRedirect(reverse_lazy('instructor:instructor'))
-    return render(request, 'instructor/class.html', {'courses': courses})
+            return redirect('instructor:course_detail', pk=pk)
+    return render(request, 'instructor/class.html', {'pk': pk,
+                                                     'c_form': c_form, 
+                                                     'courses': courses})
