@@ -220,6 +220,11 @@ button:hover, input[type="submit"]:hover
     color: black;
 }
 
+#not-found {
+    color: black;
+    text-align: center;
+}
+
 @media only screen and (max-width: 600px) 
 {
     input

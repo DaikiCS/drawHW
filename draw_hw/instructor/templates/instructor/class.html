@@ -17,8 +17,10 @@
             
             <ul>
                 <li><a href="{% url 'instructor:instructor' %}">Home</a></li>
-                <li><a href="#">Edit Homework</a></li>
-                <li><a href="#">Edit Grade</a></li>
+                {% if c_form %}
+                    <li><a href="#">Edit Homework</a></li>
+                    <li><a href="#">Edit Grade</a></li>
+                {% endif %}
 
             </ul>
         </div>
@@ -34,15 +36,20 @@
         <div id="info">
             <h3 style="color: black; text-align: center; background-color: lightgray;">Editing Course</h3>
 
-            <form action="{% url 'instructor:course_detail' pk %}" class="editCourseForm" method="POST">
-                {% csrf_token %}
+            {% if c_form %}
+                <form action="{% url 'instructor:course_detail' pk %}" class="editCourseForm" method="POST">
+                    {% csrf_token %}
 
-                {% render_field c_form.class_name type="text" name="classname" id="classname" placeholder="Course Name" attr="required" %}
+                    {% render_field c_form.class_name type="text" name="classname" id="classname" placeholder="Course Name" attr="required" %}
 
-                {% render_field c_form.description name="description" type="text" id="description" placeholder="Course Description" attr="required" %}
+                    {% render_field c_form.description name="description" type="text" id="description" placeholder="Course Description" attr="required" %}
 
-                <input type="submit" name="submit" id="submit">
-            </form>
+                    <input type="submit" name="submit" id="submit">
+                </form>
+            {% else %}
+                <p id="not-found">No course found.</p>
+            {% endif %}
+
         </div>
     </div>
     <div id="footer">

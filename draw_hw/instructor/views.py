@@ -35,6 +35,7 @@ def course_detail(request, pk):
 
     courses = Course.objects.filter(instructor=request.user)
     courses = courses.filter(pk=pk)
+    c_form = False
     for course in courses:
         c_form = CourseForm(instance=course) # pass current data
     if request.method == 'POST':
