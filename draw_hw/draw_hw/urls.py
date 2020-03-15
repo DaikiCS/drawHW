@@ -18,6 +18,8 @@ from django.urls import path
 from django.conf.urls import include
 from django.contrib.auth import views as auth_views
 from accounts import views
+from django.conf.urls.static import static
+from django.conf import settings
 import django
 
 urlpatterns = [
@@ -27,3 +29,6 @@ urlpatterns = [
     path('instructor/', include('instructor.urls', namespace='instructor')),
     path('student/', include('student.urls', namespace='student')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
