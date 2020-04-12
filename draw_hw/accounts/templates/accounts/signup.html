@@ -20,7 +20,15 @@
     </div>
     
     <div class="popSignUp" style="display: flex">
-        <div id="container">            
+        <div id="container">
+            <div class="back">+</div>    
+            <script>
+                // redirect the user to login page
+                document.querySelector(".back").addEventListener("click", function()
+                {
+                    location.href = "/";
+                });
+            </script>        
             <img style="width: 30%; float: left;"  src="{% static 'accounts/pic/drawHW.png' %}">
             <h2 style="margin-top: 35px; color:black;">SIGN UP</h2>
             
@@ -30,8 +38,11 @@
                     {% csrf_token %}
                     
                     <p class="table">
-                        <label for="is_student">IS STUDENT:</label>
-                        {% render_field form.is_student id="is_student" name="is_student" attr="required" %}
+                        <input type="radio" name="accountSU" value="studentSU" id="studentSU" checked> 
+                        <label for="studentSU">Student</label>
+
+                        <input type="radio" name="accountSU" value="facultySU" id="facultySU">
+                        <label for="facultySU">Faculty</label>
                     </p>
                     <p class="table">
                         <label for="username">USERNAME</label><br>

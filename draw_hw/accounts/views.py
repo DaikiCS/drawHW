@@ -31,8 +31,10 @@ class SignUpView(generic.CreateView):
     template_name = "accounts/signup.html"
 
     def form_valid(self, form):
+        form = forms.UserCreateForm(self.request.POST.copy())
         try:
-            if form.data['is_student'] == 'on':
+            if self.request.POST['accountSU'] == 'studentSU':
+                form.data['is_student'] = 'on'
                 self.success_url = reverse_lazy('student:student')
         except:
             return super().form_valid(form)

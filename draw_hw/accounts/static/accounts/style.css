@@ -238,7 +238,7 @@ hr
     }
 }
 
-.close, .closeForget, .closeSU
+.close, .closeForget, .closeSU, .back
 {
     position: absolute;
     top: 0;
