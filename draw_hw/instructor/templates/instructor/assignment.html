@@ -58,6 +58,23 @@
             </form>
         </div>
     </div>
+
+    {% if a_form.errors %}
+        <script>
+            let e = "";
+        </script>
+        {% for field in a_form %}
+            {% for error in field.errors %}
+                <script>
+                    e += "{{ error }}\n";
+                </script>
+            {% endfor %}
+        {% endfor %}
+        <script>
+            alert(e);
+        </script>
+    {% endif %}
+
     <div id="footer">
         Copyright &copy; drawHW 2020
     </div> 

@@ -46,6 +46,22 @@
         </div>
     </div>
 
+    {% if c_form.errors %}
+        <script>
+            let e = "";
+        </script>
+        {% for field in c_form %}
+            {% for error in field.errors %}
+                <script>
+                    e += "{{ error }}\n";
+                </script>
+            {% endfor %}
+        {% endfor %}
+        <script>
+            alert(e);
+        </script>
+    {% endif %}
+
     <div id="footer">
         Copyright &copy; drawHW 2020
     </div> 
