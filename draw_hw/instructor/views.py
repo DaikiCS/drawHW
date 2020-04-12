@@ -36,6 +36,8 @@ def course_detail(request, pk):
 
     courses = Course.objects.filter(instructor=request.user)
     courses = courses.filter(pk=pk)
+    for course in courses:
+        assignments = Assignment.objects.filter(course=course)
     c_form = False
 
     for course in courses:
@@ -52,7 +54,9 @@ def course_detail(request, pk):
             return redirect('instructor:course_detail', pk=pk)
     return render(request, 'instructor/class.html', {'pk': pk,
                                                      'c_form': c_form, 
-                                                     'courses': courses})
+                                                     'courses': courses,
+                                                     'assignments': assignments
+                                                                        })
 
 @login_required()
 def create_assignment(request, pk):
@@ -63,6 +67,8 @@ def create_assignment(request, pk):
 
     courses = Course.objects.filter(instructor=request.user)
     courses = courses.filter(pk=pk)
+    for course in courses:
+        assignments = Assignment.objects.filter(course=course)
     a_form = AssignmentForm()
 
     if request.method == 'POST':
@@ -80,5 +86,6 @@ def create_assignment(request, pk):
 
     return render(request, 'instructor/assignment.html', {'pk': pk,
                                                           'a_form': a_form,
-                                                          'courses': courses
-                                                          })
+                                                          'courses': courses,
+                                                          'assignments': assignments
+                                                                            })

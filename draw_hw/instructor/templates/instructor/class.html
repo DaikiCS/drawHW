@@ -18,17 +18,21 @@
             <ul>
                 <li><a href="{% url 'instructor:instructor' %}">Home</a></li>
                 {% if c_form %}
-                    <li><a href="{% url 'instructor:assignment' pk %}">Homework</a></li>
+                    <li><a href="{% url 'instructor:assignment' pk %}">Add Homework</a></li>
                     <li><a href="#">Grade</a></li>
                 {% endif %}
 
             </ul>
         </div>
         <div id="sideNav">
-            <h3 style="margin: 0; color: black; text-align: center; background-color: lightgray;">Current Course:</h3>
-            <ul>
+            <h3 style="margin: 0; color: black; text-align: center; background-color: lightgray;">
                 {% for course in courses %}
-                    <li><a href="{% url 'instructor:course_detail' pk %}">{{ course.class_name }}</a></li>
+                    {{ course.class_name }}
+                {% endfor %} 
+            </h3>
+            <ul>
+                {% for assignment in assignments %}
+                    <li><a href="">{{ assignment.name }}</a></li>
                 {% endfor %} 
             </ul>
 
