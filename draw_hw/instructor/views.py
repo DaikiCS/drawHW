@@ -64,7 +64,6 @@ def create_assignment(request, pk):
     courses = Course.objects.filter(instructor=request.user)
     courses = courses.filter(pk=pk)
     a_form = AssignmentForm()
-    assignment = Assignment.objects.get(pk=1) # added to test pdf donwloading
 
     if request.method == 'POST':
         request.POST = request.POST.copy() # copy post and make it mutable
@@ -78,10 +77,8 @@ def create_assignment(request, pk):
         if a_form.is_valid():
             a_form.save()
             return redirect('instructor:assignment', pk=pk)
-        print(a_form.errors)
 
     return render(request, 'instructor/assignment.html', {'pk': pk,
                                                           'a_form': a_form,
-                                                          'courses': courses,
-                                                          'assignment': assignment
+                                                          'courses': courses
                                                           })

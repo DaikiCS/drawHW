@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
+from django.contrib import messages
 
 from . import forms
 
@@ -23,6 +24,13 @@ class LoginView(generic.FormView):
             self.success_url = reverse_lazy('student:student')
 
         login(self.request, form.get_user())
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        if form.data['account'] == 'student':
+            self.success_url = reverse_lazy('student:student')
+
+        messages.error(self.request, 'Username or password is wrong')
         return super().form_valid(form)
 
 class SignUpView(generic.CreateView):

@@ -68,6 +68,22 @@
         </div> 
     </div>
 
+    {% if form.errors %}
+        <script>
+            let e = "";
+        </script>
+        {% for field in form %}
+            {% for error in field.errors %}
+                <script>
+                    e += "{{ error }}\n";
+                </script>
+            {% endfor %}
+        {% endfor %}
+        <script>
+            alert(e);
+        </script>
+    {% endif %}
+
     {% block js_tag %}<script src="{% static 'accounts/functions.js' %}"></script>{% endblock %}
 </body>
 {% endblock %}

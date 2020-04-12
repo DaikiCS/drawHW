@@ -87,6 +87,18 @@
         </div> 
     </div>
 
+    {% if messages %}
+        {% for message in messages %}
+            <script>
+                alert("{{ message }}");
+            </script>
+        {% endfor %}
+    {% endif %}
+
+    <script>
+        location.href = "/";
+    </script>
+
     {% block js_tag %}<script src="{% static 'accounts/functions.js' %}"></script>{% endblock %}
 </body>
 {% endblock %}
