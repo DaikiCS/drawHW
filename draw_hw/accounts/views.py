@@ -4,7 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.models import User
-from django.shortcuts import redirect
+from django.shortcuts import redirect, HttpResponseRedirect
 from django.contrib import messages
 
 from . import forms
@@ -13,6 +13,14 @@ class LoginView(generic.FormView):
     form_class = AuthenticationForm
     success_url = reverse_lazy('instructor:instructor')
     template_name = 'accounts/login.html'
+
+    def get(self, request, *args, **kwargs):
+        # direct a user if authenticated
+        if request.user.is_authenticated and request.user.is_student:
+            return HttpResponseRedirect(reverse_lazy('student:student'))
+        elif request.user.is_authenticated and request.user.is_student == False:
+            return HttpResponseRedirect(reverse_lazy('instructor:instructor'))
+        return super(LoginView, self).get(request, *args, **kwargs)
     
     def get_form(self, form_class=None):
         if form_class is None:

@@ -56,7 +56,7 @@ def course_detail(request, pk):
                                                      'c_form': c_form, 
                                                      'courses': courses,
                                                      'assignments': assignments
-                                                                        })
+                                                                            })
 
 @login_required()
 def create_assignment(request, pk):
