@@ -91,8 +91,9 @@ li a:hover + .button
     width: 70%;
     float: right;
     background-color: white;
-    min-height: 500px;
     margin-right: 20px;
+    height: 500px;
+    overflow-y: auto;
 }
 p
 {
@@ -113,11 +114,11 @@ input
     margin: 5px auto;
     padding: 5px;
     height: 30px;
-    background-color: whitesmoke;
-    border: none;
+
     font-size: 1.1875rem;
 
-    border-bottom: 1px solid black;
+    border: 2px solid transparent;
+    border-bottom: 2px solid black;
 
     overflow: visible;
 
@@ -140,7 +141,7 @@ hr
     width: fit-content;
     min-width: fit-content;
 
-    background-color: white;
+    background-color: rgba(256,256,256,0.6);
     color: black;
 
     border-style: solid;
@@ -161,6 +162,26 @@ hr
     border-radius: 15px;
     
 }
+
+.signout
+{
+    position: absolute; 
+    top: 5px; 
+    right: 10px; 
+    width: 80px; 
+    height: 40px;  
+    background-color: rgb(32, 32, 32); 
+    border-radius: 10px;
+    line-height: 40px;
+    text-decoration: none;
+    color: white;
+}
+
+.signout:hover
+{
+    background-color: #cf1717;
+}
+
 .addCourseForm 
 {
     border: black 2px solid;
@@ -169,7 +190,6 @@ hr
     margin-left: auto;
     margin-right: auto;
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.507);
 }
 .editCourseForm
 {
@@ -179,7 +199,6 @@ hr
     margin-left: auto;
     margin-right: auto;
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.507);
 }
 
 button, input[type="submit"]
@@ -197,6 +216,7 @@ button, input[type="submit"]
     border-style: solid;
     outline: none;
     height: auto;
+    font-size: unset;
     
 }
 
@@ -263,7 +283,7 @@ button:hover, input[type="submit"]:hover
 {
     width: 100%;
     padding: 10px;
-    position: absolute;
+    position: relative;
     bottom: 0;
     clear: both;
     text-align: center;

@@ -21,6 +21,7 @@
                     <li><a href="{% url 'instructor:assignment' pk %}">Add Homework</a></li>
                     <li><a href="#">Grade</a></li>
                 {% endif %}
+                <li style="float: right;"><a class="logout" href="{% url 'accounts:logout' %}">Logout</a></li>
 
             </ul>
         </div>
@@ -80,6 +81,6 @@
     {% block js_tag %}
         <script src="{% static 'instructor/faculty_home.js' %}"></script>
     {% endblock %}
-    <a href="{% url 'accounts:logout' %}">Logout</a>
+    
 
 {% endblock %}

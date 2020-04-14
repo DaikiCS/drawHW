@@ -16,6 +16,7 @@
     <div id="container">
         <div id="topNav">
             <h1>Home Faculty</h1>
+            <a class="signout" href="{% url 'accounts:logout' %}">Logout</a>
         </div>
         <div id="sideNav">
             <div>
@@ -66,5 +67,5 @@
         Copyright &copy; drawHW 2020
     </div> 
     {% block js_tag %}<script src="{% static 'instructor/faculty_home.js' %}"></script>{% endblock %}
-<a href="{% url 'accounts:logout' %}">Logout</a>
+    
 {% endblock %}

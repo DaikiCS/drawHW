@@ -4,9 +4,8 @@
 {% load widget_tweaks %}
 {% block css_tag %}
     <link rel="stylesheet" type="text/css" href="{% static 'accounts/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'instructor/extra.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'instructor/faculty_styles.css' %}">
-
-    <link href="http://cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.css" rel="stylesheet"/>
 
 {% endblock %}
 {% block body_content %}
@@ -22,6 +21,7 @@
                 <li><a href="{% url 'instructor:instructor' %}">Home</a></li>
                 <li><a href="" class="active">Add Homework</a></li>
                 <li><a href="#">Edit Grade</a></li>
+                <li style="float: right;"><a class="logout" href="{% url 'accounts:logout' %}">Logout</a></li>
 
             </ul>
         </div>
@@ -38,7 +38,7 @@
             </ul>
 
         </div>
-        <div id="info" style="padding-top:15px; color: black;">
+        <div id="info" style="padding-top:0px; color: black;">
             <h3 style="color: black; text-align: center; background-color: lightgray;">Upload PDF File</h3>
 
             <form action="{% url 'instructor:assignment' pk %}" method="POST" enctype="multipart/form-data">
@@ -52,7 +52,7 @@
                 <br>
 
                 <input type="date" id="duedate" name="duedate">
-                <input type="text" id="duetime" name="duetime" placeholder="Time">
+                <input type="text" id="duetime" name="duetime" placeholder="Time" autocomplete="off">
                 <br>
 
                 {% render_field a_form.pdf type="file" id="upload" name="upload" accept="application/pdf" attr="required" %}
@@ -82,7 +82,7 @@
     <div id="footer">
         Copyright &copy; drawHW 2020
     </div> 
-
+    
     {% block js_tag %}
         <script src="http://cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.js"></script>
         <script>
