@@ -110,7 +110,8 @@ def add_answers(request, pk, pk1):
         an_form = AnswersForm(request.POST)
         for course in courses:
             an_form.data["course"] = course # save current course
-       
+
+        
 
         if an_form.is_valid():
             an_form.save()
