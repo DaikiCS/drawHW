@@ -2,7 +2,7 @@ from datetime import datetime
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import generic
-from courses.forms import CourseForm, AssignmentForm
+from courses.forms import CourseForm, AssignmentForm, AnswersForm
 from courses.models import Course, Assignment
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
@@ -86,6 +86,39 @@ def create_assignment(request, pk):
 
     return render(request, 'instructor/assignment.html', {'pk': pk,
                                                           'a_form': a_form,
+                                                          'courses': courses,
+                                                          'assignments': assignments
+                                                                            })
+
+
+@login_required()
+def add_answers(request, pk, pk1):
+    # deny access for certain users
+    if request.user.is_student or \
+        request.user.is_superuser:
+            return HttpResponseForbidden()
+
+    courses = Course.objects.filter(instructor=request.user)
+    courses = courses.filter(pk=pk)
+    for course in courses:
+        assignments = Assignment.objects.filter(course=course)
+        assignments = assignments.filter(pk=pk1)
+    an_form = AnswersForm()
+
+    if request.method == 'POST':
+        request.POST = request.POST.copy() # copy post and make it mutable
+        an_form = AnswersForm(request.POST)
+        for course in courses:
+            an_form.data["course"] = course # save current course
+       
+
+        if an_form.is_valid():
+            an_form.save()
+            return redirect('instructor:assignment', pk=pk, pk1=pk1)
+
+    return render(request, 'instructor/addAnswer.html', {'pk': pk,
+                                                          'pk1': pk1,  
+                                                          'an_form': an_form,
                                                           'courses': courses,
                                                           'assignments': assignments
                                                                             })

@@ -33,7 +33,7 @@
             </h3>
             <ul>
                 {% for assignment in assignments %}
-                    <li><a href="">{{ assignment.name }}</a></li>
+                    <li><a href="{% url 'instructor:add_answers' pk assignment.pk %}">{{ assignment.name }}</a></li>
                 {% endfor %} 
             </ul>
 

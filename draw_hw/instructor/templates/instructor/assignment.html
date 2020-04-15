@@ -19,7 +19,7 @@
             
             <ul>
                 <li><a href="{% url 'instructor:instructor' %}">Home</a></li>
-                <li><a href="" class="active">Add Homework</a></li>
+                <li><a href="#" class="active">Add Homework</a></li>
                 <li><a href="#">Edit Grade</a></li>
                 <li style="float: right;"><a class="logout" href="{% url 'accounts:logout' %}">Logout</a></li>
 
@@ -33,7 +33,7 @@
             </h3>
             <ul>
                 {% for assignment in assignments %}
-                    <li><a href="">{{ assignment.name }}</a></li>
+                    <li><a href="{% url 'instructor:add_answers' pk assignment.pk %}">{{ assignment.name }}</a></li>
                 {% endfor %}
             </ul>
 
@@ -51,33 +51,16 @@
                 <label for="duedate">Due Date:</label> 
                 <br>
 
-                <input type="date" id="duedate" name="duedate">
+                <input type="date" id="duedate" name="duedate" placeholder="yyyy-mm-dd">
                 <input type="text" id="duetime" name="duetime" placeholder="Time" autocomplete="off">
                 <br>
 
                 {% render_field a_form.pdf type="file" id="upload" name="upload" accept="application/pdf" attr="required" %}
-                <br>
-
-                <input type="submit" name="submit" id="submit">
+                
+                <input type="submit" name="submit" id="submit"> 
             </form>
         </div>
     </div>
-
-    {% if a_form.errors %}
-        <script>
-            let e = "";
-        </script>
-        {% for field in a_form %}
-            {% for error in field.errors %}
-                <script>
-                    e += "{{ error }}\n";
-                </script>
-            {% endfor %}
-        {% endfor %}
-        <script>
-            alert(e);
-        </script>
-    {% endif %}
 
     <div id="footer">
         Copyright &copy; drawHW 2020

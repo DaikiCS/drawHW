@@ -7,7 +7,13 @@ class Course(models.Model):
     instructor  = models.ForeignKey("accounts.User", limit_choices_to={"is_student": False, "is_superuser": False}, on_delete=models.CASCADE, related_name="instructor")
 
 class Assignment(models.Model):
-    name = models.CharField(max_length=15, unique=True)
+    name = models.CharField(max_length=15)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     deadline = models.DateTimeField()
     pdf = models.FileField(upload_to="pdfs/")
+
+class Answers(models.Model):
+    hw_name = models.CharField(max_length=15)
+    question_no = models.PositiveSmallIntegerField()
+    correct_ans = models.CharField(max_length=1)
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
