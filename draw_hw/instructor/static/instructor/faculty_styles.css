@@ -224,9 +224,15 @@ select
 {
     outline: none;
     border: #cf1717 1px solid;
-    background-color: black;
-    color: white;
-    width: fit-content;
+    background-color: white;
+    color: black;
+    width: 40px;
+    height: 35px;
+    padding: 5px;
+    font-size: 15px;
+    margin: 3px;
+    text-align: center;
+
     font-family: Arial, Helvetica, sans-serif;
 }
 
