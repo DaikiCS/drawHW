@@ -41,13 +41,14 @@
             
             <h3 style="color: black; text-align: center; background-color: lightgray;">Submit Answer Key</h3>
 
-            <input type="number" name="questionCount" id="questionCount" placeholder="Enter number of question(s). " required>
-            <br>
-            {% csrf_token %}
-            <button onclick="displayInputs()">Enter</button>
-
             <form action="{% url 'instructor:add_answers' pk pk1 %}" class="AnswersForm" method="POST"></form>
-            
+            {% csrf_token %}
+
+                <input type="number" name="questionCount" id="questionCount" placeholder="Enter number of question(s). " required>
+                <br>
+
+                <button onclick="displayInputs()">Enter</button>
+
                 <p id="inputs" style="color: black; text-align: center;"></p>
                 
             </form>
