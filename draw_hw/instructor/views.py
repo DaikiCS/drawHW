@@ -111,7 +111,10 @@ def add_answers(request, pk, pk1):
         for course in courses:
             an_form.data["course"] = course # save current course
 
-        
+        an_form.data["hw_name"] = assignments
+        print(assignments)
+        count = an_form.data["questionCount"]
+        print(count)
 
         if an_form.is_valid():
             an_form.save()
