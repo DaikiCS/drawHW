@@ -100,6 +100,7 @@ def add_answers(request, pk, pk1):
 
     courses = Course.objects.filter(instructor=request.user)
     courses = courses.filter(pk=pk)
+    
     for course in courses:
         assignments = Assignment.objects.filter(course=course)
         assignments = assignments.filter(pk=pk1)
@@ -111,14 +112,29 @@ def add_answers(request, pk, pk1):
         for course in courses:
             an_form.data["course"] = course # save current course
 
-        an_form.data["hw_name"] = assignments
-        print(assignments)
-        count = an_form.data["questionCount"]
-        print(count)
+        for assignment in assignments:
+            an_form.data["hw_name"] = assignment.name
+            an_form.data["assignment"] = assignment
+
+        if "questionCount" in request.POST:
+            count = an_form.data["questionCount"]  
+        
+        count = int(count)
+        answer_lst = []
+        question_lst = []
+        for i in range(1, count+1):
+            question_lst.append(i)
+            #an_form.data["question_no"] = i                         ## previously tried
+            answer_lst.append(an_form.data["q"+str(i)])
+            # an_form.data["correct_ans"] = an_form.data["q"+str(i)] ## previously tried
+        an_form.data["question_no"] = question_lst
+        an_form.data["correct_ans"] = answer_lst
 
         if an_form.is_valid():
+            print("saved")
             an_form.save()
-            return redirect('instructor:assignment', pk=pk, pk1=pk1)
+            return redirect('instructor:course_detail', pk=pk)
+        print(an_form.errors)
 
     return render(request, 'instructor/addAnswer.html', {'pk': pk,
                                                           'pk1': pk1,  
