@@ -16,9 +16,9 @@ class AssignmentAdmin(admin.ModelAdmin):
     list_filter = []
 
 class AnswersAdmin(admin.ModelAdmin):
-    list_display = ['hw_name', 'question_no', 'correct_ans', 'assignment']
+    list_display = ['question_no', 'correct_ans', 'assignment']
 
-    search_fields = ['hw_name']
+    search_fields = ['assignment']
 
     list_filter = []
 
@@ -26,4 +26,4 @@ admin.site.register(models.Course, CourseAdmin)
 
 admin.site.register(models.Assignment, AssignmentAdmin)
 
-admin.site.register(models.Answers, AnswersAdmin)
+admin.site.register(models.Answer, AnswersAdmin)

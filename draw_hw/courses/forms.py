@@ -1,4 +1,4 @@
-from courses.models import Course, Assignment, Answers
+from courses.models import Course, Assignment, Answer
 from django import forms
 
 class CourseForm(forms.ModelForm):
@@ -13,5 +13,5 @@ class AssignmentForm(forms.ModelForm):
 
 class AnswersForm(forms.ModelForm):
     class Meta:
-        model = Answers
-        fields = ['hw_name', 'question_no', 'correct_ans', 'assignment']
+        model = Answer
+        fields = ['question_no', 'correct_ans', 'assignment']
