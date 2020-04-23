@@ -1,0 +1,323 @@
+html 
+{ 
+    background: url("/static/img/tri.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    font-family: Helvetica Neue,helvetica,arial,sans-serif;
+}
+body
+{
+    text-align: center;
+    color: black;
+    font-family: Helvetica Neue,helvetica,arial,sans-serif;
+}
+#container
+{
+    position: relative;
+    background-color: rgba(0,0,0,0.4);
+    width: 85%;
+    min-height: 600px;
+    height: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    color: whitesmoke;
+    height: 600px;
+    font-family: 'Times New Roman', Times, serif;
+    position: relative;
+    border-radius: 15px;
+    border-style: solid;
+    border-width: 3px;
+    border-color: black;
+    font-family: Helvetica Neue,helvetica,arial,sans-serif;
+}
+#sideNav ul 
+{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(32, 32, 32);
+    overflow-y: auto;
+}
+#topNav ul 
+{
+    list-style-type: none;
+    margin: 20px;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgb(32, 32, 32);
+}
+
+
+#topNav li 
+{
+    float: left;
+}
+
+li a 
+{
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}   
+
+li a:hover 
+{
+    background-color: rgb(87, 87, 87);
+    color: black;
+
+}
+li a:hover + .button
+{
+    display:inline;
+}
+.button
+{
+    display: none;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.active
+{
+    background-color: rgb(216, 10, 10);
+}
+#sideNav
+{
+    text-align: left;
+    width: 22%;
+    height: 500px;
+    background-color: rgb(32, 32, 32);;
+    float: left;
+    margin-left: 20px;
+    overflow-y: auto;
+}
+#info
+{
+    width: 70%;
+    float: right;
+    background-color: white;
+    margin-right: 20px;
+    height: 500px;
+    overflow-y: auto;
+    color: black;
+}
+p
+{
+    padding: 25px;
+    padding-bottom: 0%;
+    padding-top: 0%;
+    text-align: left;
+}
+strong
+{
+    font-size: xx-large;
+    color:  #cf1717;
+}
+input
+{
+    width: 300px;
+    display: block;
+    margin: 5px auto;
+    padding: 5px;
+    height: 30px;
+
+    font-size: 1.1875rem;
+
+    border: 2px solid transparent;
+    border-bottom: 2px solid black;
+
+    overflow: visible;
+
+    
+}
+input:focus
+{
+    border: 2px solid #cf1717;
+    background-color: rgb(255, 187, 187);
+    color: black;
+    outline: none;
+}
+hr
+{
+    border-color: #cf1717;
+}
+
+#name
+{
+    width: fit-content;
+    min-width: fit-content;
+
+    background-color: rgba(256,256,256,0.6);
+    color: black;
+
+    border-style: solid;
+    border-width: 3px;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    border-color:  #cf1717;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    height: 100%;
+    overflow: hidden;
+
+    margin-bottom: 10px;
+    
+    border-radius: 15px;
+    
+}
+
+.signout
+{
+    position: absolute; 
+    top: 5px; 
+    right: 10px; 
+    width: 80px; 
+    height: 40px;  
+    background-color: rgb(32, 32, 32); 
+    border-radius: 10px;
+    line-height: 40px;
+    text-decoration: none;
+    color: white;
+}
+
+.signout:hover
+{
+    background-color: #cf1717;
+}
+
+.addCourseForm 
+{
+    border: black 2px solid;
+    border-radius: 10px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+}
+.editCourseForm
+{
+    border: black 2px solid;
+    border-radius: 10px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+}
+
+button, input[type="submit"]
+{
+    
+    border-width: 2px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 15px;
+    width: 180px;
+    background-color: #cf1717;
+    color: white;
+    border-radius: 25px;
+    border-color: black;
+    border-style: solid;
+    outline: none;
+    height: auto;
+    font-size: unset;
+    
+}
+
+select
+{
+    outline: none;
+    border: #cf1717 1px solid;
+    background-color: white;
+    color: black;
+    width: 40px;
+    height: 35px;
+    padding: 5px;
+    font-size: 15px;
+    margin: 3px;
+    text-align: center;
+
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button:hover, input[type="submit"]:hover
+{
+    
+    border-color: #cf1717;
+    border-style: solid;
+    border-width: 2px;
+    background-color: white;
+    color: black;
+}
+
+#not-found {
+    color: black;
+    text-align: center;
+}
+
+@media only screen and (max-width: 600px) 
+{
+    input
+    {
+        width: fit-content;
+
+
+        font-size: medium;
+    }
+    #name
+    {
+        width: fit-content;
+    }
+    #container
+    {
+        width: 95%;
+        height: fit-content;
+        padding-bottom: 5px;
+    }
+    #topNav ul
+    {
+        margin: 8px;
+        
+    }
+    #sideNav
+    {
+        margin-left: 8px;
+    }
+    #sideNav ul
+    {
+        font-size: small;
+    }
+    #info
+    {
+
+        margin-right: 8px;
+    }
+    h3
+    {
+        font-size: medium;
+    }
+    .signout
+    {
+        width: 50px;
+        height: 35px;
+        font-size: 12px;
+        line-height: 35px;
+    }
+}
+#footer
+{
+    width: 100%;
+    padding: 10px;
+    position: relative;
+    bottom: 0;
+    clear: both;
+    text-align: center;
+    color: black;
+}

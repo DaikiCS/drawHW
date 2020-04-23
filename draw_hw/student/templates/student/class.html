@@ -1,0 +1,46 @@
+{% extends "index.html" %}
+{% block title_tag %}Student Class{% endblock %}
+{% load static %}
+{% load widget_tweaks %}
+{% block css_tag %}
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'student/student_styles.css' %}">
+{% endblock %}
+
+{% block body_content %}
+    <div id="name">
+        <h3> <strong>D</strong>aiki<strong>R</strong>oth<strong>A</strong>bhijit<strong>W</strong>enhao HomeWork.com</h3>
+        <hr size="3">
+    </div>
+
+    <div id="container">
+        <div id="topNav">
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="#">Grade</a></li>
+                <li style="float: right;"><a class="logout" href="{% url 'accounts:logout' %}">Logout</a></li>
+
+            </ul>
+        </div>
+        <div id="sideNav">
+            <div>
+                <h3 style=" margin:0; height: 40px; line-height: 40px; padding: 5px; padding-top:0px; color: black; text-align: center; background-color: white;"><!-- insert class name --></h3>
+            </div>
+            
+            <ul>
+                <!-- insert assignments -->
+            </ul>
+        </div>
+        <div id="info">
+            <h3 style="color: white; text-align: center; background-color: black;">Welcome to Intro to CPU.</h3>
+            <p>
+                Course Name: Intro to CPU <br>
+                Course Description: Introduction to computers.
+            </p>
+            
+        </div>
+    </div>
+    <div id="footer">
+        Copyright &copy; drawHW 2020
+    </div> 
+{% endblock %}

@@ -6,4 +6,4 @@ from django.views import generic
 from . import mixins
 
 class TestView(mixins.StudentRequiredMixin, generic.TemplateView):
-    template_name = 'student/test.html'
+    template_name = 'student/home.html'
