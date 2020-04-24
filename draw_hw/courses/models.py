@@ -22,3 +22,10 @@ class Answer(models.Model):
     question_no = models.PositiveSmallIntegerField(unique=True)
     correct_ans = models.CharField(max_length=1)
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+
+class RegisterCourse(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    student = models.ForeignKey("accounts.User", limit_choices_to={"is_student": True, "is_superuser": False}, on_delete=models.CASCADE, related_name="student")
+
+    class Meta:
+        unique_together = (('course', 'student'),)

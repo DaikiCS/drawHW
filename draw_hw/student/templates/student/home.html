@@ -24,7 +24,9 @@
             </div>
             
             <ul>
-                <!-- insert classes that are registered -->
+                {% for course in courses %}
+                    <li><a href="">{{ course.class_name }}</a></li>
+                {% endfor %} 
             </ul>
         </div>
         <div id="info">
@@ -33,7 +35,11 @@
             <button onclick="displayAdd()">Add Course</button>
 
             <br><br><br>
-            <p id="addPlace"></p>
+            <form id="f1" style="display: none;" action="{% url 'student:student' %}" method='POST'>
+                {% csrf_token %}
+                <input type='number' id='courseNumber' required placeholder='Enter Course Number' name='courseNumber'>
+                <input type='submit'>
+            </form>
             
         </div>
     </div>
@@ -41,12 +47,16 @@
         Copyright &copy; drawHW 2020
     </div> 
 
+    {% if error %}
+    <script>
+        alert("{{ error }}");
+    </script>
+    {% endif %}
+
     <script>
         function displayAdd()
         {
-            var doc = document.getElementById("addPlace");
-
-            doc.innerHTML = "<form><input type='number' id='courseNumber' required placeholder='Enter Course Number'><input type='submit'></form>";
+            document.querySelector("#f1").style.display = "block";
         }
     </script>
 {% endblock %}

@@ -22,8 +22,17 @@ class AnswersAdmin(admin.ModelAdmin):
 
     list_filter = []
 
+class RegisterCourseAdmin(admin.ModelAdmin):
+    list_display = ['course', 'student']
+
+    search_fields = ['course']
+
+    list_filter = []
+
 admin.site.register(models.Course, CourseAdmin)
 
 admin.site.register(models.Assignment, AssignmentAdmin)
 
 admin.site.register(models.Answer, AnswersAdmin)
+
+admin.site.register(models.RegisterCourse, RegisterCourseAdmin)
