@@ -42,15 +42,17 @@
 
             <button>Download Assignment</button> <br><br> <!--this button to download pdf in new tab-->
 
-            <button onclick="displayInputs()" id="displayB">Submit Answer</button> <!--dispaly input for answers-->
-            <br>
+            {% if pass_due == False %}
+                <button onclick="displayInputs()" id="displayB">Submit Answer</button> <!--dispaly input for answers-->
+                <br>
 
-            <form action=""> <!--form to get all the answers -->
-                {% csrf_token %}
-                <p id="inputs" style="text-align: center;">
+                <form action=""> <!--form to get all the answers -->
+                    {% csrf_token %}
+                    <p id="inputs" style="text-align: center;">
 
-                </p>
-            </form>
+                    </p>
+                </form>
+            {% endif %}
         </div>
     </div>
     <div id="footer">

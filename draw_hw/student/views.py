@@ -5,7 +5,7 @@ from courses.models import Course, RegisterCourse, Assignment
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-
+from datetime import datetime
 from . import mixins
 
 @login_required()
@@ -63,10 +63,14 @@ def submit_answer(request, pk, pk1):
         request.user.is_superuser:
             return HttpResponseForbidden()
 
+    pass_due = False
     try: 
         course = Course.objects.get(pk=pk)
         assignments = Assignment.objects.filter(course=course)
         assignment = Assignment.objects.get(pk=pk1)
+
+        if assignment.deadline.replace(tzinfo=None) < datetime.today():
+            pass_due = True
     except:
         return HttpResponseRedirect(reverse_lazy('student:student'))
 
@@ -75,4 +79,5 @@ def submit_answer(request, pk, pk1):
                                                     'assignment': assignment,
                                                     'pk': pk,
                                                     'pk1': pk1,
+                                                    'pass_due': pass_due
                                                                             })
