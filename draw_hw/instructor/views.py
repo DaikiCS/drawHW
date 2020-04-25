@@ -2,8 +2,8 @@ from datetime import datetime
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import generic
-from courses.forms import CourseForm, AssignmentForm, AnswersForm
-from courses.models import Course, Assignment, Answer
+from courses.forms import CourseForm, AssignmentForm, AnswerInstructorForm
+from courses.models import Course, Assignment, AnswerInstructor
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 
@@ -96,6 +96,9 @@ def create_assignment(request, pk):
                                                                             })
 
 
+#
+#   will need to implement error handling when adding answers more than one
+#
 @login_required()
 def add_answers(request, pk, pk1):
     # deny access for certain users
@@ -109,11 +112,11 @@ def add_answers(request, pk, pk1):
         assignments = Assignment.objects.filter(course=course)
         assignments = assignments.filter(pk=pk1)
 
-    an_form = AnswersForm()
+    an_form = AnswerInstructorForm()
 
     if request.method == 'POST':
         request.POST = request.POST.copy() # copy post and make it mutable
-        an_form = AnswersForm(request.POST)
+        an_form = AnswerInstructorForm(request.POST)
 
         for course in courses:
             an_form.data["course"] = course # save current course
@@ -125,13 +128,17 @@ def add_answers(request, pk, pk1):
             count = an_form.data["questionCount"]  
         
         count = int(count)
+        for assignment in assignments:
+            assignment.num_q = count
+            assignment.save()
+
         
         # save each answer 1 at a time
         for i in range(1, count+1):
             an_form.data["correct_ans"] = an_form.data["q"+str(i)]
             an_form.data["question_no"] = i   
 
-            answer = Answer(
+            answer = AnswerInstructor(
                 question_no=an_form.data["question_no"], 
                 correct_ans=an_form.data["correct_ans"], 
                 assignment=an_form.data["assignment"]

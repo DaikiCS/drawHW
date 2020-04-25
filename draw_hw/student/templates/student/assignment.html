@@ -38,15 +38,16 @@
             <p>
                 Name: {{ assignment.name }} <br>
                 Duedate: {{ assignment.deadline }} <br>
+                score: {{ score }}
             </p>
 
-            <button>Download Assignment</button> <br><br> <!--this button to download pdf in new tab-->
+            <a href="{{ assignment.pdf.url }}" target="_blank"><button>Download Assignment</button></a> <br><br> <!--this button to download pdf in new tab-->
 
-            {% if pass_due == False %}
+            {% if past_due == False %}
                 <button onclick="displayInputs()" id="displayB">Submit Answer</button> <!--dispaly input for answers-->
                 <br>
 
-                <form action=""> <!--form to get all the answers -->
+                <form method="POST" action="{% url 'student:submit_answer' pk assignment.pk %}"> <!--form to get all the answers -->
                     {% csrf_token %}
                     <p id="inputs" style="text-align: center;">
 
@@ -60,10 +61,10 @@
     </div> 
 
     <script> 
+        var count = "{{ num_q }}";
         function displayInputs()
         {
             document.getElementById("displayB").innerHTML = "CLEAR Answer";
-            var count = 5; // this is to somehow be dynamic !!!!!!!!!!!********** IMPORTANT *******
             if(count.length != 0 && count > 0) // check if null
             {
                 var info = "";
