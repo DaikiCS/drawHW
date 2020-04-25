@@ -16,7 +16,7 @@
     <div id="container">
         <div id="topNav">
             <ul>
-                <li><a href="home.html">Home</a></li>
+                <li><a href="{% url 'student:student' %}">Home</a></li>
                 <li><a href="#">Grade</a></li>
                 <li style="float: right;"><a class="logout" href="{% url 'accounts:logout' %}">Logout</a></li>
 
@@ -24,23 +24,32 @@
         </div>
         <div id="sideNav">
             <div>
-                <h3 style=" margin:0; height: 40px; line-height: 40px; padding: 5px; padding-top:0px; color: black; text-align: center; background-color: white;"><!-- insert class name --></h3>
+                <h3 style=" margin:0; height: 40px; line-height: 40px; padding: 5px; padding-top:0px; color: black; text-align: center; background-color: white;">{{ course.class_name }}</h3>
             </div>
             
             <ul>
-                <!-- insert assignments -->
+                {% for assignment in assignments %}
+                    <li><a href="{% url 'student:submit_answer' pk assignment.pk %}">{{ assignment.name }}</a></li>
+                {% endfor %} 
             </ul>
         </div>
         <div id="info">
-            <h3 style="color: white; text-align: center; background-color: black;">Welcome to Intro to CPU.</h3>
+            <h3 style="color: white; text-align: center; background-color: black;">Welcome to {{ course.class_name }}.</h3>
             <p>
-                Course Name: Intro to CPU <br>
-                Course Description: Introduction to computers.
+                Course Name: {{ course.class_name }} <br>
+                Instructor: {{ course.instructor }} <br>
+                Course Description: {{ course.description }} 
             </p>
-            
+        
         </div>
     </div>
     <div id="footer">
         Copyright &copy; drawHW 2020
     </div> 
+
+    {% if error %}
+        <script>
+            alert("{{ error }}");
+        </script>
+    {% endif %}
 {% endblock %}

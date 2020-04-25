@@ -25,7 +25,7 @@
             
             <ul>
                 {% for course in courses %}
-                    <li><a href="">{{ course.class_name }}</a></li>
+                    <li><a href="{% url 'student:course_detail' course.pk %}">{{ course.class_name }}</a></li>
                 {% endfor %} 
             </ul>
         </div>
@@ -48,9 +48,9 @@
     </div> 
 
     {% if error %}
-    <script>
-        alert("{{ error }}");
-    </script>
+        <script>
+            alert("{{ error }}");
+        </script>
     {% endif %}
 
     <script>
