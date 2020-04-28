@@ -39,7 +39,7 @@
         </div>
         <div id="info" style="height: 500px; overflow-y: auto;"> <!-- main code for adding answers (above and below are inhert from faculty)-->
             
-            <h3 style="color: black; text-align: center; background-color: lightgray;">Submit Answer Key</h3>
+            <h3 style="color: white; text-align: center; background-color: black;">Submit Answer Key</h3>
 
             <form action="{% url 'instructor:add_answers' pk pk1 %}" class="AnswersForm" method="POST"></form>
             {% csrf_token %}
