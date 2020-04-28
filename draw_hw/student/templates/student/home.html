@@ -1,0 +1,62 @@
+{% extends "index.html" %}
+{% block title_tag %}Student Home{% endblock %}
+{% load static %}
+{% load widget_tweaks %}
+{% block css_tag %}
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'student/student_styles.css' %}">
+{% endblock %}
+
+{% block body_content %}
+    <div id="name">
+        <h3> <strong>D</strong>aiki<strong>R</strong>oth<strong>A</strong>bhijit<strong>W</strong>enhao HomeWork.com</h3>
+        <hr size="3">
+    </div>
+
+    <div id="container">
+        <div id="topNav">
+            <h1>Home Student</h1>
+            <a class="signout" href="{% url 'accounts:logout' %}">Logout</a>
+        </div>
+        <div id="sideNav">
+            <div>
+                <h3 style=" margin:0; height: 40px; line-height: 40px; padding: 5px; padding-top:0px; color: black; text-align: center; background-color: white;">Courses:</h3>
+            </div>
+            
+            <ul>
+                {% for course in courses %}
+                    <li><a href="{% url 'student:course_detail' course.pk %}">{{ course.class_name }}</a></li>
+                {% endfor %} 
+            </ul>
+        </div>
+        <div id="info">
+            <h3 style="color: white; text-align: center; background-color: black;">Welcome to Homepage.</h3>
+            
+            <button onclick="displayAdd()">Add Course</button>
+
+            <br><br><br>
+            <form id="f1" style="display: none;" action="{% url 'student:student' %}" method='POST'>
+                {% csrf_token %}
+                <input type='number' id='courseNumber' required placeholder='Enter Course Number' name='courseNumber'>
+                <input type='submit'>
+            </form>
+            
+        </div>
+    </div>
+    <div id="footer">
+        Copyright &copy; drawHW 2020
+    </div> 
+
+    {% if error %}
+        <script>
+            alert("{{ error }}");
+        </script>
+    {% endif %}
+
+    <script>
+        function displayAdd()
+        {
+            document.querySelector("#f1").style.display = "block";
+        }
+    </script>
+{% endblock %}
