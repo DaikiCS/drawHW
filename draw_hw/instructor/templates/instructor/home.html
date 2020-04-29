@@ -5,6 +5,7 @@
 {% block css_tag %}
     <link rel="stylesheet" type="text/css" href="{% static 'accounts/style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'instructor/faculty_styles.css' %}">
+    
 {% endblock %}
 
 {% block body_content %}
@@ -30,7 +31,7 @@
             </ul>
         </div>
         <div id="info">
-            <h3 style="color: black; text-align: center; background-color: lightgray;">Adding Course</h3>
+            <h3 style="color: white; text-align: center; background-color: black;">Adding Course</h3>
             
             <!-- <button id="addCourseButton">Add Course</button> <br><br> -->
             <form action="{% url 'instructor:instructor' %}" class="addCourseForm" method="POST">

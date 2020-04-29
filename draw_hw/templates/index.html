@@ -7,6 +7,9 @@
     {% block css_tag %}{% endblock %}
     {% block js_tag %}{% endblock %}
     <title>{% block title_tag %}{% endblock %}</title>
+    {% load static %}
+    <link rel="icon" href="{% static 'accounts/pic/drawHW.png' %}" type="image/x-icon">
+    
 </head>
 <body>
     {% block body_content %}
