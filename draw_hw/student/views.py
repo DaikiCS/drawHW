@@ -109,7 +109,7 @@ def submit_answer(request, pk, pk1):
     
     correct = 0
     score = 0
-    answer_student = AnswerStudent.objects.filter(assignment=assignment)
+    answer_student = AnswerStudent.objects.filter(assignment=assignment, student=request.user)
     answer_instructor = AnswerInstructor.objects.filter(assignment=assignment)
 
     if answer_student and answer_instructor:
