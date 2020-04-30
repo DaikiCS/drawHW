@@ -106,18 +106,6 @@ def submit_answer(request, pk, pk1):
 
             if an_form.is_valid():
                 answer.save()         
-    
-    correct = 0
-    score = 0
-    answer_student = AnswerStudent.objects.filter(assignment=assignment, student=request.user)
-    answer_instructor = AnswerInstructor.objects.filter(assignment=assignment)
-
-    if answer_student and answer_instructor:
-        for s, i in zip(answer_student, answer_instructor):
-            if s.correct_ans == i.correct_ans:
-                correct += 1
-
-        score = correct / count * 100
 
     return render(request, 'student/assignment.html', {'course': course,
                                                     'assignments': assignments,
@@ -125,6 +113,73 @@ def submit_answer(request, pk, pk1):
                                                     'num_q': assignment.num_q,
                                                     'pk': pk,
                                                     'pk1': pk1,
-                                                    'past_due': past_due,
-                                                    'score': score
+                                                    'past_due': past_due
                                                                             })
+
+def get_grade(request, pk):
+    # deny access for certain users
+    if request.user.is_student == False or \
+        request.user.is_superuser:
+            return HttpResponseForbidden()
+
+    scores = []
+    correct_lst = []
+    total = []
+    try: 
+        # get a course
+        course = Course.objects.get(pk=pk)
+        # get all the assignments
+        assignments = Assignment.objects.filter(course=course)
+
+        # loop each assignment
+        for assignment in assignments:
+            score = 0
+            correct = 0
+            count = assignment.num_q
+
+            # get answer for each assignment with user
+            answer_student = AnswerStudent.objects.filter(assignment=assignment, student=request.user)
+            answer_instructor = AnswerInstructor.objects.filter(assignment=assignment)
+
+            if assignment.deadline.replace(tzinfo=None) >= datetime.today():
+                # submitted on time
+                if answer_instructor and answer_student:
+                    for s, i in zip(answer_student, answer_instructor):
+                        if s.correct_ans == i.correct_ans:
+                            correct += 1
+
+                    score = correct / count * 100
+
+                    scores.append(round(score, 2))
+                    total.append(count)
+                    correct_lst.append(correct)
+            else:
+                # pass due date
+                if answer_instructor:
+                    scores.append(round(score, 2))
+                    total.append(count)
+                    correct_lst.append(0)
+            
+
+        assignments = zip(assignments, correct_lst, total, scores)
+    except Exception as ex:
+        print(ex)
+        return HttpResponseRedirect(reverse_lazy('student:student'))
+
+    # correct = 0
+    # score = 0
+    # answer_student = AnswerStudent.objects.filter(assignment=assignment, student=request.user)
+    # answer_instructor = AnswerInstructor.objects.filter(assignment=assignment)
+
+    # if answer_student and answer_instructor:
+    #     for s, i in zip(answer_student, answer_instructor):
+    #         if s.correct_ans == i.correct_ans:
+    #             correct += 1
+
+    #     score = correct / count * 100
+
+    return render(request, 'student/gradeStudent.html', {'pk': pk,
+                                                         'course': course,
+                                                         'assignments': assignments,
+                                                        })
+                                                                            

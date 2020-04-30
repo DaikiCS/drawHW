@@ -5,6 +5,7 @@
 {% block css_tag %}
     <link rel="stylesheet" type="text/css" href="{% static 'accounts/style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'student/student_styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'student/table.css' %}">
 {% endblock %}
 
 {% block body_content %}
@@ -15,9 +16,10 @@
 
     <div id="container">
         <div id="topNav">
+            
             <ul>
                 <li><a href="{% url 'student:student' %}">Home</a></li>
-                <li><a href="{% url 'student:grade' pk %}">Grade</a></li>
+                <li><a href="{% url 'student:grade' pk %}" class="active">Grade</a></li>
                 <li style="float: right;"><a class="logout" href="{% url 'accounts:logout' %}">Logout</a></li>
 
             </ul>
@@ -28,28 +30,37 @@
             </div>
             
             <ul>
-                {% for assignment in assignments %}
-                    <li><a href="{% url 'student:submit_answer' pk assignment.pk %}">{{ assignment.name }}</a></li>
-                {% endfor %} 
+                <!-- assignment -->
             </ul>
         </div>
         <div id="info">
-            <h3 style="color: white; text-align: center; background-color: black;">Welcome to {{ course.class_name }}.</h3>
-            <p>
-                Course Name: {{ course.class_name }} <br>
-                Instructor: {{ course.instructor }} <br>
-                Course Description: {{ course.description }} 
-            </p>
-        
+            <table class="rothTable">
+                <thead>
+                    <tr>
+                        <th>Assignment Name</th>
+                        <th>Raw Scores</th>
+                        <th>% Scores</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background-color: lightblue;"> <!--  DO NOT REMOVE THIS PART-->
+                        <td>Overall</td>
+                        <td>---</td>
+                        <td><!-- calculate overall --></td>
+                    </tr> <!--  DO NOT REMOVE THIS PART-->
+
+                    {% for assignment, correct, total, score in assignments %}
+                        <tr>
+                            <td>{{ assignment.name }}</td>
+                            <td>{{ correct }}/{{ total }}</td>
+                            <td>{{ score }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
     <div id="footer">
         Copyright &copy; drawHW 2020
     </div> 
-
-    {% if error %}
-        <script>
-            alert("{{ error }}");
-        </script>
-    {% endif %}
 {% endblock %}

@@ -18,7 +18,7 @@
             
             <ul>
                 <li><a href="{% url 'student:student' %}">Home</a></li>
-                <li><a href="#">Grade</a></li>
+                <li><a href="{% url 'student:grade' pk %}">Grade</a></li>
                 <li style="float: right;"><a class="logout" href="{% url 'accounts:logout' %}">Logout</a></li>
             </ul>
         </div>
@@ -38,8 +38,8 @@
             <p>
                 Name: {{ assignment.name }} <br>
                 Duedate: {{ assignment.deadline }} <br>
-                score: {{ score }}
             </p>
+            <br>
 
             <a href="{{ assignment.pdf.url }}" target="_blank"><button>Download Assignment</button></a> <br><br> <!--this button to download pdf in new tab-->
 

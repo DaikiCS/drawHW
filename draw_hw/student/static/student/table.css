@@ -1,0 +1,29 @@
+.rothTable
+{
+	width: 100%;
+	margin-bottom: 30px;
+	position: relative;
+	border-collapse: collapse;
+}
+
+.rothTable thead tr th
+{
+	background-color: black;
+	color: white;
+	padding: 12px;
+	position: sticky;
+	top: 0;
+	
+}
+
+
+.rothTable tbody tr td
+{
+	padding: 7px;
+}
+
+.rothTable tbody tr:nth-child(even)
+{
+	background-color: whitesmoke;
+	padding: 7px;
+}
