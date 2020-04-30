@@ -11,6 +11,7 @@ class AssignmentForm(forms.ModelForm):
         model = Assignment
         fields = ['name', 'course', 'deadline', 'pdf']
 
+
 class AnswerInstructorForm(forms.ModelForm):
     class Meta:
         model = AnswerInstructor

@@ -26,14 +26,12 @@
         </div>
         <div id="sideNav" style="overflow-x: hidden;">
             <h3 style="margin:0; height: 40px; line-height: 40px; padding: 5px; padding-top:0px; color: black; text-align: center; background-color: white;">
-            {% for course in courses %}
-                {{ course.class_name }}
+                {% for assignment in assignments %}
+                {{ assignment.name }}
             {% endfor %}
             </h3>
             <ul>
-                {% for assignment in assignments %}
-                    <li><a href="">{{ assignment.name }}</a></li>
-                {% endfor %}
+                <li><a href="#" onclick="goBack()">Go Back</a></li>
             </ul>
 
         </div>
@@ -41,7 +39,7 @@
             
             <h3 style="color: black; text-align: center; background-color: lightgray;">Submit Answer Key</h3>
             
-            <form action="{% url 'instructor:add_answers' pk pk1 %}" method="POST" enctype="multipart/form-data">
+            <form action="{% url 'instructor:add_answers' pk pk1 %}" class="addAnswerForm" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="number" name="questionCount" id="questionCount" placeholder="Enter number of question(s). " required>
                 <br>
@@ -79,6 +77,11 @@
                 document.getElementById("inputs").innerHTML = info+"<input type='submit'>";
             }
             
+        }
+    </script>
+    <script>
+        function goBack() {
+          window.history.back();
         }
     </script>
     

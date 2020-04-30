@@ -1,0 +1,95 @@
+{% extends "index.html" %}
+{% block title_tag %}editHW{% endblock %}
+{% load static %}
+{% load widget_tweaks %}
+{% block css_tag %}
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'instructor/extra.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'instructor/faculty_styles.css' %}">
+{% endblock %}
+{% block body_content %}
+
+    <div id="name">
+        <h3> <strong>D</strong>aiki<strong>R</strong>oth<strong>A</strong>bhijit<strong>W</strong>enhao HomeWork.com</h3>
+        <hr size="3">
+    </div>
+
+    <div id="container">
+
+        <div id="topNav">
+            <ul>
+                <li><a href="{% url 'instructor:instructor' %}">Home</a></li>
+                <li><a href="{% url 'instructor:assignment' pk %}">Add Homework</a></li>
+                <li><a href="#">Edit Grade</a></li>
+                <li style="float: right;"><a class="logout" href="{% url 'accounts:logout' %}">Logout</a></li>
+            </ul>
+        </div>
+
+        <div id="sideNav" style="overflow-x: hidden;">
+            <h3 style="margin:0; height: 40px; line-height: 40px; padding: 5px; padding-top:0px; color: black; text-align: center; background-color: white;">
+            {% for assignment in assignments %}
+                {{ assignment.name }}
+            {% endfor %}
+            </h3>
+            <ul>
+                {% for assignment in assignments %}
+                    <li><a href="{% url 'instructor:add_answers' pk pk1 %}">Answer Key</a></li>
+                    <li><a href="#" onclick="goBack()">Go Back</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div id="info" style="height: 500px; overflow-y: auto;"> <!-- main code for adding answers (above and below are inhert from faculty)-->
+            
+            <h3 style="color: black; text-align: center; background-color: lightgray;">Editing Homework</h3>
+            {% if eh_form %}
+                <form action="{% url 'instructor:edit_homework' pk pk1 %}" class="AssignmentForm" method="POST" enctype="multipart/form-data">
+                    <br>
+                    {% csrf_token %}
+                    <label for="duedate" style="color:black;">Current Details:</label> 
+                    {% render_field eh_form.name type="text" name="hwName" placeholder="Homework Name" attr="required" %}
+                
+                    <br>
+                    
+                
+                    <input type="date" id="duedate" name="duedate" value="{{ date }}" required>
+                    <input type="text" id="duetime" name="duetime" placeholder="Time" autocomplete="off" value="{{ time }}" required>
+                    <br>
+
+                    
+                    <input type="submit" name="Update" id="submit"> 
+
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <div id="footer">
+        Copyright &copy; drawHW 2020
+    </div> 
+
+    <script>
+        function goBack() {
+          window.history.back();
+        }
+    </script>
+    
+    
+    {% block js_tag %}
+        
+        <script src="http://cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.js"></script>
+        <script>
+            var timepicker = new TimePicker('duetime', {
+                lang: 'en',
+                theme: 'dark'
+            });
+            timepicker.on('change', function(evt) {
+            
+                var value = (evt.hour || '00') + ':' + (evt.minute || '00');
+                evt.element.value = value;
+
+            });
+        </script>
+    {% endblock %}
+
+{% endblock %}

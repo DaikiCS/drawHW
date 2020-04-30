@@ -7,6 +7,7 @@ from courses.models import Course, Assignment, AnswerInstructor
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 
+
 @login_required()
 def create_course(request):
     # deny access for certain users
@@ -93,6 +94,58 @@ def create_assignment(request, pk):
                                                           'a_form': a_form,
                                                           'courses': courses,
                                                           'assignments': assignments
+                                                                            })
+
+
+@login_required()
+def assignment_detail(request, pk, pk1):
+    # deny access for certain users
+    if request.user.is_student or \
+        request.user.is_superuser:
+            return HttpResponseForbidden()
+
+    courses = Course.objects.filter(instructor=request.user)
+    courses = courses.filter(pk=pk)
+    eh_form = AssignmentForm()
+    for course in courses:
+        assignments = Assignment.objects.filter(course=course)
+        assignments = assignments.filter(pk=pk1)
+    
+    for assignment in assignments:
+        dt = str(assignment.deadline.replace(tzinfo=None))
+        date = (dt.split(' ')[0])
+        print(date)
+        time = (dt.split(' ')[1])
+        time1 = (time.split(':')[0])
+        time2 = (time.split(':')[1])
+        time = time1 + ":" + time2
+        print(time)
+        eh_form = AssignmentForm(instance=assignment)
+
+
+    if request.method == 'POST':
+        request.POST = request.POST.copy() # copy post and make it mutable
+        eh_form = AssignmentForm(request.POST, request.FILES, instance=assignment)
+
+        for course in courses:
+            eh_form.data["course"] = course # save current course
+
+        # save deadline
+        time = eh_form.data["duedate"] + ' ' + eh_form.data["duetime"]
+        eh_form.data["deadline"] = datetime.strptime(time, "%Y-%m-%d %H:%M")
+        
+
+        if eh_form.is_valid():
+            eh_form.save()
+            return redirect('instructor:edit_homework', pk=pk, pk1=pk1)
+
+    return render(request, 'instructor/edithw.html', {'pk': pk,
+                                                          'pk1': pk1,  
+                                                          'eh_form': eh_form,
+                                                          'courses': courses,
+                                                          'assignments': assignments,
+                                                          'date': date,
+                                                          'time': time
                                                                             })
 
 
