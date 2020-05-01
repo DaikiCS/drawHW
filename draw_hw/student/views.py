@@ -153,9 +153,20 @@ def get_grade(request, pk):
                     scores.append(round(score, 2))
                     total.append(count)
                     correct_lst.append(correct)
-            else:
-                # pass due date
-                if answer_instructor:
+            else: # pass due date
+                # submitted on time
+                if answer_instructor and answer_student:
+                    for s, i in zip(answer_student, answer_instructor):
+                        if s.correct_ans == i.correct_ans:
+                            correct += 1
+
+                    score = correct / count * 100
+
+                    scores.append(round(score, 2))
+                    total.append(count)
+                    correct_lst.append(correct)
+                # did not submit on time
+                elif answer_instructor:
                     scores.append(round(score, 2))
                     total.append(count)
                     correct_lst.append(0)
@@ -165,18 +176,6 @@ def get_grade(request, pk):
     except Exception as ex:
         print(ex)
         return HttpResponseRedirect(reverse_lazy('student:student'))
-
-    # correct = 0
-    # score = 0
-    # answer_student = AnswerStudent.objects.filter(assignment=assignment, student=request.user)
-    # answer_instructor = AnswerInstructor.objects.filter(assignment=assignment)
-
-    # if answer_student and answer_instructor:
-    #     for s, i in zip(answer_student, answer_instructor):
-    #         if s.correct_ans == i.correct_ans:
-    #             correct += 1
-
-    #     score = correct / count * 100
 
     return render(request, 'student/gradeStudent.html', {'pk': pk,
                                                          'course': course,

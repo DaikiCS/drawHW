@@ -114,12 +114,10 @@ def assignment_detail(request, pk, pk1):
     for assignment in assignments:
         dt = str(assignment.deadline.replace(tzinfo=None))
         date = (dt.split(' ')[0])
-        print(date)
         time = (dt.split(' ')[1])
         time1 = (time.split(':')[0])
         time2 = (time.split(':')[1])
         time = time1 + ":" + time2
-        print(time)
         eh_form = AssignmentForm(instance=assignment)
 
 

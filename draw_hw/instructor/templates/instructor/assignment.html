@@ -34,8 +34,8 @@
             <ul>
                 {% for assignment in assignments %}
                     <li><a href="{% url 'instructor:edit_homework' pk assignment.pk %}">{{ assignment.name }}</a></li>
-                    <li><a href="#" onclick="goBack()">Go Back</a></li>
                 {% endfor %}
+                <li><a href="#" onclick="goBack()">Go Back</a></li>
             </ul>
 
         </div>

@@ -20,9 +20,12 @@ class Assignment(models.Model):
         return "@{}".format(self.name)
 
 class AnswerInstructor(models.Model):
-    question_no = models.PositiveSmallIntegerField(unique=True)
+    question_no = models.PositiveSmallIntegerField()
     correct_ans = models.CharField(max_length=1)
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = (('question_no', 'assignment'),)
 
 class RegisterCourse(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -32,7 +35,10 @@ class RegisterCourse(models.Model):
         unique_together = (('course', 'student'),)
 
 class AnswerStudent(models.Model):
-    question_no = models.PositiveSmallIntegerField(unique=True)
+    question_no = models.PositiveSmallIntegerField()
     correct_ans = models.CharField(max_length=1)
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
     student = models.ForeignKey("accounts.User", limit_choices_to={"is_student": True, "is_superuser": False}, on_delete=models.CASCADE, related_name="student_answer")
+
+    class Meta:
+        unique_together = (('question_no', 'assignment', 'student'),)
