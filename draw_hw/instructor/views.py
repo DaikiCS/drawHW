@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import generic
 from courses.forms import CourseForm, AssignmentForm, AnswerInstructorForm
-from courses.models import Course, Assignment, AnswerInstructor
+from courses.models import Course, Assignment, AnswerInstructor, AnswerStudent, RegisterCourse
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 
@@ -41,9 +41,10 @@ def course_detail(request, pk):
     for course in courses:
         assignments = Assignment.objects.filter(course=course)
     c_form = False
-
     for course in courses:
         c_form = CourseForm(instance=course) # pass current data
+    #if (not assignments):
+    
 
     if request.method == 'POST':
         request.POST = request.POST.copy() # copy post and make it mutable
@@ -206,4 +207,94 @@ def add_answers(request, pk, pk1):
                                                           'an_form': an_form,
                                                           'courses': courses,
                                                           'assignments': assignments
+                                                                            })
+
+@login_required()
+def grades(request, pk):
+    # deny access for certain users
+    if request.user.is_student or \
+        request.user.is_superuser:
+            return HttpResponseForbidden()
+
+    courses = Course.objects.filter(instructor=request.user)
+    courses = courses.filter(pk=pk)
+    for course in courses:
+        assignments = Assignment.objects.filter(course=course)
+    click_on_course = False
+            
+    return render(request, 'instructor/gradeInstructor.html', {'pk': pk,
+                                                     'click_on_course': click_on_course, 
+                                                     'courses': courses,
+                                                     'assignments': assignments
+                                                                            })
+
+@login_required()
+def grades_specific(request, pk, pk1):
+    # deny access for certain users
+    if request.user.is_student or \
+        request.user.is_superuser:
+            return HttpResponseForbidden()
+    # all the courses under this instructor
+    courses = Course.objects.filter(instructor=request.user)
+    courses = courses.filter(pk=pk)
+    # all the asignments under this this courseID
+    for course in courses:
+        assignments = Assignment.objects.filter(course=course)
+        this_homework = assignments.get(pk=pk1)
+    click_on_course = True
+    # all the students who are registerd in this course
+    students = RegisterCourse.objects.filter(course=course)   
+
+    # all the students did this perticular HW
+    #st_did_this_hw = AnswerStudent.objects.filter(student=students, assignment=this_homework)
+    scores = []
+    correct_lst = []
+    total = []
+    try:
+        # loop each assignment
+        for student in students:
+            score = 0
+            correct = 0
+            count = this_homework.num_q
+            # get answer for each assignment with user
+            answer_student = AnswerStudent.objects.filter(assignment=this_homework)
+            answer_instructor = AnswerInstructor.objects.filter(assignment=this_homework)
+            print(answer_student)
+            print("afae")
+            if answer_student != None and student.student == (answer_student.filter(student=student.student))[0].student:
+                # answered this assignment
+                print("Hello")
+                if answer_instructor and answer_student:
+                    for s, i in zip(answer_student, answer_instructor):
+                        if s.correct_ans == i.correct_ans:
+                            correct += 1
+                    print("no problem")
+                    score = correct / count * 100
+
+                    scores.append(round(score, 2))
+                    total.append(count)
+                    correct_lst.append(correct)
+            else:
+                print("Hello1")
+                # did not answered this assignment
+                scores.append(round(score, 2))
+                total.append(count)
+                correct_lst.append(0)
+            print("end")
+            
+
+        data = zip(students, correct_lst, total, scores)
+    except Exception as ex:
+        print(ex)
+        return HttpResponseRedirect(reverse_lazy('instructor:instructor'))
+
+    
+            
+    return render(request, 'instructor/gradeInstructor.html', {'pk': pk,
+                                                     'pk1': pk1,
+                                                     'click_on_course': click_on_course, 
+                                                     'courses': courses,
+                                                     'assignments': assignments,
+                                                     'this_homework': this_homework,
+                                                     'data': data
                                                                             })

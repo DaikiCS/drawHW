@@ -1,0 +1,112 @@
+{% extends "index.html" %}
+{% block title_tag %}Instructor Assignment Grage{% endblock %}
+{% load static %}
+{% load widget_tweaks %}
+{% block css_tag %}
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'student/student_styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'student/table.css' %}">
+{% endblock %}
+
+{% block body_content %}
+    <div id="name">
+        <h3> <strong>D</strong>aiki<strong>R</strong>oth<strong>A</strong>bhijit<strong>W</strong>enhao HomeWork.com</h3>
+        <hr size="3">
+    </div>
+
+    <div id="container">
+        <div id="topNav">
+            
+          <ul>
+              <li><a href="{% url 'instructor:instructor' %}">Home</a></li>
+                  <li><a href="{% url 'instructor:assignment' pk %}">Add Homework</a></li>
+                  <li><a href="{% url 'instructor:grades' pk %}">Grades</a></li>
+              <li style="float: right;"><a class="logout" href="{% url 'accounts:logout' %}">Logout</a></li>
+
+          </ul>
+      </div>
+        <div id="sideNav" style="overflow-x: hidden;">
+            <h3 style="margin:0; height: 40px; line-height: 40px; padding: 5px; padding-top:0px; color: black; text-align: center; background-color: white;">
+              {% for course in courses %}
+                  {{ course.class_name }}
+              {% endfor %} 
+            </h3>
+            <ul>
+              {% for assignment in assignments %}
+                  <li><a href="{% url 'instructor:grades_specific' pk assignment.pk %}">{{ assignment.name }}</a></li>
+              {% endfor %} 
+              <li><a href="#" onclick="goBack()">Go Back</a></li>
+            </ul>
+
+        </div>
+        <div id="info" style="height: 500px; overflow-y: auto;"> <!-- main code for edit grade (above and below are inhert from faculty)-->
+          
+          {%if click_on_course %}  
+            <table class="rothTable">
+                <thead>
+                  <tr>
+                    <th>Student Name</th>
+                    <th>{{ this_homework.name }} <br>Raw Scores</th>
+                    <th>% Scores</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  {% for student, correct, total, score in data %}
+                        <tr>
+                            <td>{{ student.student }}</td>
+                            <td>{{ correct }}/{{ total }}</td>
+                            <td>{{ score }}</td>
+                        </tr>
+                    {% endfor %}
+                  
+                </tbody>
+            </table>
+            
+          {% else %}  
+            <h3 for="duedate" style="color:black;">Select a course from the list:</h3>
+          {% endif %}
+
+        </div>  <!-- End main code -->
+    </div>
+  
+    <div id="footer">
+        Copyright &copy; drawHW 2020
+    </div> 
+
+    <script>
+        function goBack() {
+          window.history.back();
+        }
+    </script>
+    <!-- script to add the answers -->
+    <script> 
+        function displayInputs()
+        {
+            var count = document.getElementById("questionCount").value;
+            if(count.length != 0 && count > 0) // check if null
+            {
+                var info = "";
+                for(var i = 1; i <= count; i++)
+                {
+                    info += `<label for="q`+i+`">Answer for question `+i+`:</label>
+                <select id="q`+i+`" name="q`+i+`">
+                    <option value="a">A</option>
+                    <option value="b">B</option>
+                    <option value="c">C</option>
+                    <option value="d">D</option>
+                </select><br>` ;
+                }
+
+                document.getElementById("inputs").innerHTML = info+"<input type='submit'>";
+            }
+            
+        }
+    </script>
+    
+    {% block js_tag %}
+        <script src="{% static 'instructor/faculty_home.js' %}"></script>
+    {% endblock %}
+    
+
+{% endblock %}

@@ -48,12 +48,13 @@ def course_detail(request, pk):
             return HttpResponseForbidden()
 
     try: 
-        course = Course.objects.get(pk=pk)
-        assignments = Assignment.objects.filter(course=course)
-    except:
+        course = RegisterCourse.objects.get(course__pk=pk, student=request.user)
+        assignments = Assignment.objects.filter(course=course.course)
+    except Exception as e:
+        print(e) 
         return HttpResponseRedirect(reverse_lazy('student:student'))
 
-    return render(request, 'student/class.html', {'course': course,
+    return render(request, 'student/class.html', {'course': course.course,
                                                   'assignments': assignments,
                                                   'pk': pk
                                                                             })
@@ -71,8 +72,8 @@ def submit_answer(request, pk, pk1):
     an_form = AnswerStudentForm()
 
     try: 
-        course = Course.objects.get(pk=pk)
-        assignments = Assignment.objects.filter(course=course)
+        course = RegisterCourse.objects.get(course__pk=pk)
+        assignments = Assignment.objects.filter(course=course.course)
         assignment = Assignment.objects.get(pk=pk1)
 
         if assignment.deadline.replace(tzinfo=None) < datetime.today():
@@ -107,7 +108,7 @@ def submit_answer(request, pk, pk1):
             if an_form.is_valid():
                 answer.save()         
 
-    return render(request, 'student/assignment.html', {'course': course,
+    return render(request, 'student/assignment.html', {'course': course.course,
                                                     'assignments': assignments,
                                                     'assignment': assignment,
                                                     'num_q': assignment.num_q,
