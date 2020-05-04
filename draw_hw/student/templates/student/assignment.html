@@ -37,8 +37,8 @@
                                 {% endif %}
                             {% endfor %}
                     </a></li>
-                            
                 {% endfor %} 
+                <li><a href="#" onclick="goBack()">Go Back</a></li>
             </ul>
         </div>
         <div id="info">
@@ -54,24 +54,41 @@
             {% if  answerKey == False %}
                 <h3 for="duedate" style="color:red;">No AnswerKey has been submitted by Instructor:</h3>
             {% endif %}
+
             {% if past_due == False %}
-            {% if answerKey == True %}
-                <button onclick="displayInputs()" id="displayB">Submit Answer</button> <!--dispaly input for answers-->
-                <br>
+                {% if answerKey == True %}
+                    {% for name in name_lst %}
+                        {% if assignment.name == name %} 
+                            <br>
+                            <label style="color:green;">Answer has been submitted </label>
+                        {% endif %}
+                    {% empty %}
+                        <br>
+                        <button onclick="displayInputs()" id="displayB">Submit Answer</button> <!--dispaly input for answers-->
+                        <br>
 
-                <form method="POST" action="{% url 'student:submit_answer' pk assignment.pk %}"> <!--form to get all the answers -->
-                    {% csrf_token %}
-                    <p id="inputs" style="text-align: center;">
+                        <form method="POST" action="{% url 'student:submit_answer' pk assignment.pk %}"> <!--form to get all the answers -->
+                            {% csrf_token %}
+                            <p id="inputs" style="text-align: center;">
 
-                    </p>
-                </form>
-            {% endif %}
+                            </p>
+                        </form>
+                    {% endfor %}
+                {% endif %}
+            {% else %}
+                <h3 for="duedate" style="color:red;">The deadline has passed</h3>
             {% endif %}
         </div>
     </div>
     <div id="footer">
         Copyright &copy; drawHW 2020
     </div> 
+
+    <script>
+        function goBack() {
+          window.history.back();
+        }
+    </script>
 
     <script> 
         var count = "{{ num_q }}";

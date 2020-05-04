@@ -27,6 +27,7 @@
                 {% for course in courses %}
                     <li><a href="{% url 'student:course_detail' course.pk %}">{{ course.class_name }}</a></li>
                 {% endfor %} 
+                <li><a href="#" onclick="goBack()">Go Back</a></li>
             </ul>
         </div>
         <div id="info">
@@ -57,6 +58,12 @@
         function displayAdd()
         {
             document.querySelector("#f1").style.display = "block";
+        }
+    </script>
+
+    <script>
+        function goBack() {
+        window.history.back();
         }
     </script>
 {% endblock %}

@@ -30,7 +30,7 @@
             </div>
             
             <ul>
-                <!-- assignment -->
+                <li><a href="#" onclick="goBack()">Go Back</a></li>
             </ul>
         </div>
         <div id="info">
@@ -62,5 +62,11 @@
     </div>
     <div id="footer">
         Copyright &copy; drawHW 2020
-    </div> 
+    </div>
+    
+    <script>
+        function goBack() {
+        window.history.back();
+        }
+    </script>
 {% endblock %}

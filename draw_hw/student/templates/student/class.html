@@ -37,8 +37,8 @@
                                 {% endif %}
                             {% endfor %}
                     </a></li>
-                            
                 {% endfor %} 
+                <li><a href="#" onclick="goBack()">Go Back</a></li>
             </ul>
         </div>
         <div id="info">
@@ -60,4 +60,10 @@
             alert("{{ error }}");
         </script>
     {% endif %}
+
+    <script>
+        function goBack() {
+          window.history.back();
+        }
+    </script>
 {% endblock %}

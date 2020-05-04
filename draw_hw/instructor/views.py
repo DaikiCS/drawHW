@@ -38,9 +38,12 @@ def course_detail(request, pk):
 
     courses = Course.objects.filter(instructor=request.user)
     courses = courses.filter(pk=pk)
+
+    assignments = None
     for course in courses:
         assignments = Assignment.objects.filter(course=course)
     c_form = False
+
     for course in courses:
         c_form = CourseForm(instance=course) # pass current data
     #if (not assignments):
@@ -232,18 +235,23 @@ def grades_specific(request, pk, pk1):
     if request.user.is_student or \
         request.user.is_superuser:
             return HttpResponseForbidden()
+
     # all the courses under this instructor
     courses = Course.objects.filter(instructor=request.user)
     courses = courses.filter(pk=pk)
+
     # all the asignments under this this courseID
     for course in courses:
         assignments = Assignment.objects.filter(course=course)
         this_homework = assignments.get(pk=pk1)
     click_on_course = True
+
     # if instructor submitted answers
     answerKey = AnswerInstructor.objects.filter(assignment=this_homework)
     if len(answerKey) == 0:
         answerKey = False
+
+    passed = True
     if this_homework.deadline.replace(tzinfo=None) >= datetime.today():
         passed = False
 

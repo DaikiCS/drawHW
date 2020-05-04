@@ -52,20 +52,19 @@ def course_detail(request, pk):
     course = RegisterCourse.objects.get(course__pk=pk, student=request.user)
     assignments = Assignment.objects.filter(course=course.course)
     answer_exist = AnswerStudent.objects.filter(student=request.user)
+
     for answer in answer_exist:
         name = str(answer.assignment)
         name = (name.replace(name[:1], ''))
-        print(name)
         exist_lst.append(name)
+
     for assignment in assignments:
-        print(assignment.name)
         for i in range(len(exist_lst)):
             if exist_lst[i] == assignment.name:
                 name = str(assignment.name)
                 name_lst.append(name)
                 break
     
-
     try: 
         course = RegisterCourse.objects.get(course__pk=pk, student=request.user)
         assignments = Assignment.objects.filter(course=course.course)
@@ -93,13 +92,13 @@ def submit_answer(request, pk, pk1):
     course = RegisterCourse.objects.get(course__pk=pk, student=request.user)
     assignments = Assignment.objects.filter(course=course.course)
     answer_exist = AnswerStudent.objects.filter(student=request.user)
+
     for answer in answer_exist:
         name = str(answer.assignment)
         name = (name.replace(name[:1], ''))
-        print(name)
         exist_lst.append(name)
+
     for assignment in assignments:
-        print(assignment.name)
         for i in range(len(exist_lst)):
             if exist_lst[i] == assignment.name:
                 name = str(assignment.name)
@@ -150,7 +149,7 @@ def submit_answer(request, pk, pk1):
             )
 
             if an_form.is_valid():
-                answer.save()         
+                answer.save()       
 
     return render(request, 'student/assignment.html', {'course': course.course,
                                                     'assignments': assignments,
@@ -172,11 +171,14 @@ def get_grade(request, pk):
     scores = []
     correct_lst = []
     total = []
+    hws = []
     try: 
         # get a course
         course = Course.objects.get(pk=pk)
         # get all the assignments
         assignments = Assignment.objects.filter(course=course)
+
+        passed = True
 
         # loop each assignment
         for assignment in assignments:
@@ -198,6 +200,7 @@ def get_grade(request, pk):
 
                     score = correct / count * 100
 
+                    hws.append(assignment)
                     scores.append(round(score, 2))
                     total.append(count)
                     correct_lst.append(correct)
@@ -210,17 +213,18 @@ def get_grade(request, pk):
 
                     score = correct / count * 100
 
+                    hws.append(assignment)
                     scores.append(round(score, 2))
                     total.append(count)
                     correct_lst.append(correct)
                 # did not submit on time
                 elif answer_instructor:
+                    hws.append(assignment)
                     scores.append(round(score, 2))
                     total.append(count)
                     correct_lst.append(0)
             
-
-        assignments = zip(assignments, correct_lst, total, scores)
+        assignments = zip(hws, correct_lst, total, scores)
     except Exception as ex:
         print(ex)
         return HttpResponseRedirect(reverse_lazy('student:student'))
