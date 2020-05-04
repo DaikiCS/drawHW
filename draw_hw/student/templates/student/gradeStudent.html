@@ -46,7 +46,7 @@
                     <tr style="background-color: lightblue;"> <!--  DO NOT REMOVE THIS PART-->
                         <td>Overall</td>
                         <td>---</td>
-                        <td><!-- calculate overall --></td>
+                        <td>{% if total_score != None %} {{ total_score }} {% endif %}</td>
                     </tr> <!--  DO NOT REMOVE THIS PART-->
 
                     {% for assignment, correct, total, score in assignments %}

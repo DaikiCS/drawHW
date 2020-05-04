@@ -78,9 +78,6 @@ def course_detail(request, pk):
                                                   'name_lst': name_lst
                                                                             })
 
-#
-#   will need to implement error handling when adding answers more than one
-#
 def submit_answer(request, pk, pk1):
     # deny access for certain users
     if request.user.is_student == False or \
@@ -229,9 +226,20 @@ def get_grade(request, pk):
         print(ex)
         return HttpResponseRedirect(reverse_lazy('student:student'))
 
+    # calculate total scores
+    total_score = 0
+    for score in scores:
+        total_score += score
+    
+    if len(scores) != 0:
+        total_score = total_score / len(scores)
+    else:
+        total_score = None
+
     return render(request, 'student/gradeStudent.html', {'pk': pk,
                                                          'course': course,
                                                          'assignments': assignments,
-                                                         'passed': passed
+                                                         'passed': passed,
+                                                         'total_score': total_score
                                                         })
                                                                             
