@@ -36,34 +36,37 @@ def course_detail(request, pk):
         request.user.is_superuser:
             return HttpResponseForbidden()
 
-    courses = Course.objects.filter(instructor=request.user)
-    courses = courses.filter(pk=pk)
+    try:
+        courses = Course.objects.filter(instructor=request.user)
+        courses = courses.filter(pk=pk)
 
-    assignments = None
-    for course in courses:
-        assignments = Assignment.objects.filter(course=course)
-    c_form = False
+        for course in courses:
+            assignments = Assignment.objects.filter(course=course)
+        c_form = False
 
-    for course in courses:
-        c_form = CourseForm(instance=course) # pass current data
-    #if (not assignments):
-    
+        for course in courses:
+            c_form = CourseForm(instance=course) # pass current data
+        
 
-    if request.method == 'POST':
-        request.POST = request.POST.copy() # copy post and make it mutable
-        c_form = CourseForm(request.POST, instance=course) # pass user data
-        c_form.data["instructor"] = request.user # save current user
-        c_form.data["code"] = course.code # save current course
+        if request.method == 'POST':
+            request.POST = request.POST.copy() # copy post and make it mutable
+            c_form = CourseForm(request.POST, instance=course) # pass user data
+            c_form.data["instructor"] = request.user # save current user
+            c_form.data["code"] = course.code # save current course
 
-        if c_form.is_valid():
-            c_form.save()
-            return redirect('instructor:course_detail', pk=pk)
-            
-    return render(request, 'instructor/class.html', {'pk': pk,
-                                                     'c_form': c_form, 
-                                                     'courses': courses,
-                                                     'assignments': assignments
+            if c_form.is_valid():
+                c_form.save()
+                return redirect('instructor:course_detail', pk=pk)
+                
+        return render(request, 'instructor/class.html', {'pk': pk,
+                                                        'c_form': c_form, 
+                                                        'courses': courses,
+                                                        'assignments': assignments
                                                                             })
+    except Exception as ex:
+        print(ex)
+        return HttpResponseRedirect(reverse_lazy('instructor:instructor'))
+
 
 @login_required()
 def create_assignment(request, pk):
@@ -72,33 +75,38 @@ def create_assignment(request, pk):
         request.user.is_superuser:
             return HttpResponseForbidden()
 
-    courses = Course.objects.filter(instructor=request.user)
-    courses = courses.filter(pk=pk)
-    for course in courses:
-        assignments = Assignment.objects.filter(course=course)
-
-    a_form = AssignmentForm()
-
-    if request.method == 'POST':
-        request.POST = request.POST.copy() # copy post and make it mutable
-        a_form = AssignmentForm(request.POST, request.FILES)
+    try:
+        courses = Course.objects.filter(instructor=request.user)
+        courses = courses.filter(pk=pk)
 
         for course in courses:
-            a_form.data["course"] = course # save current course
+            assignments = Assignment.objects.filter(course=course)
 
-        # save deadline
-        time = a_form.data["duedate"] + ' ' + a_form.data["duetime"]
-        a_form.data["deadline"] = datetime.strptime(time, "%Y-%m-%d %H:%M")
+        a_form = AssignmentForm()
 
-        if a_form.is_valid():
-            a_form.save()
-            return redirect('instructor:assignment', pk=pk)
+        if request.method == 'POST':
+            request.POST = request.POST.copy() # copy post and make it mutable
+            a_form = AssignmentForm(request.POST, request.FILES)
 
-    return render(request, 'instructor/assignment.html', {'pk': pk,
-                                                          'a_form': a_form,
-                                                          'courses': courses,
-                                                          'assignments': assignments
+            for course in courses:
+                a_form.data["course"] = course # save current course
+
+            # save deadline
+            time = a_form.data["duedate"] + ' ' + a_form.data["duetime"]
+            a_form.data["deadline"] = datetime.strptime(time, "%Y-%m-%d %H:%M")
+
+            if a_form.is_valid():
+                a_form.save()
+                return redirect('instructor:assignment', pk=pk)
+
+        return render(request, 'instructor/assignment.html', {'pk': pk,
+                                                            'a_form': a_form,
+                                                            'courses': courses,
+                                                            'assignments': assignments
                                                                             })
+    except Exception as ex:
+        print(ex)
+        return HttpResponseRedirect(reverse_lazy('instructor:instructor')) 
 
 
 @login_required()
@@ -111,44 +119,49 @@ def assignment_detail(request, pk, pk1):
     courses = Course.objects.filter(instructor=request.user)
     courses = courses.filter(pk=pk)
     eh_form = AssignmentForm()
-    for course in courses:
-        assignments = Assignment.objects.filter(course=course)
-        assignments = assignments.filter(pk=pk1)
-    
-    for assignment in assignments:
-        dt = str(assignment.deadline.replace(tzinfo=None))
-        date = (dt.split(' ')[0])
-        time = (dt.split(' ')[1])
-        time1 = (time.split(':')[0])
-        time2 = (time.split(':')[1])
-        time = time1 + ":" + time2
-        eh_form = AssignmentForm(instance=assignment)
-
-
-    if request.method == 'POST':
-        request.POST = request.POST.copy() # copy post and make it mutable
-        eh_form = AssignmentForm(request.POST, request.FILES, instance=assignment)
-
+   
+    try:
         for course in courses:
-            eh_form.data["course"] = course # save current course
-
-        # save deadline
-        time = eh_form.data["duedate"] + ' ' + eh_form.data["duetime"]
-        eh_form.data["deadline"] = datetime.strptime(time, "%Y-%m-%d %H:%M")
+            assignments = Assignment.objects.filter(course=course)
+            assignments = assignments.filter(pk=pk1)
         
+        for assignment in assignments:
+            dt = str(assignment.deadline.replace(tzinfo=None))
+            date = (dt.split(' ')[0])
+            time = (dt.split(' ')[1])
+            time1 = (time.split(':')[0])
+            time2 = (time.split(':')[1])
+            time = time1 + ":" + time2
+            eh_form = AssignmentForm(instance=assignment)
 
-        if eh_form.is_valid():
-            eh_form.save()
-            return redirect('instructor:edit_homework', pk=pk, pk1=pk1)
 
-    return render(request, 'instructor/edithw.html', {'pk': pk,
-                                                          'pk1': pk1,  
-                                                          'eh_form': eh_form,
-                                                          'courses': courses,
-                                                          'assignments': assignments,
-                                                          'date': date,
-                                                          'time': time
+        if request.method == 'POST':
+            request.POST = request.POST.copy() # copy post and make it mutable
+            eh_form = AssignmentForm(request.POST, request.FILES, instance=assignment)
+
+            for course in courses:
+                eh_form.data["course"] = course # save current course
+
+            # save deadline
+            time = eh_form.data["duedate"] + ' ' + eh_form.data["duetime"]
+            eh_form.data["deadline"] = datetime.strptime(time, "%Y-%m-%d %H:%M")
+            
+
+            if eh_form.is_valid():
+                eh_form.save()
+                return redirect('instructor:edit_homework', pk=pk, pk1=pk1)
+
+        return render(request, 'instructor/edithw.html', {'pk': pk,
+                                                            'pk1': pk1,  
+                                                            'eh_form': eh_form,
+                                                            'courses': courses,
+                                                            'assignments': assignments,
+                                                            'date': date,
+                                                            'time': time
                                                                             })
+    except Exception as ex:
+        print(ex)
+        return HttpResponseRedirect(reverse_lazy('instructor:instructor'))
 
 
 #
@@ -161,54 +174,59 @@ def add_answers(request, pk, pk1):
         request.user.is_superuser:
             return HttpResponseForbidden()
 
-    courses = Course.objects.filter(instructor=request.user)
-    courses = courses.filter(pk=pk)
-    for course in courses:
-        assignments = Assignment.objects.filter(course=course)
-        assignments = assignments.filter(pk=pk1)
-
-    an_form = AnswerInstructorForm()
-
-    if request.method == 'POST':
-        request.POST = request.POST.copy() # copy post and make it mutable
-        an_form = AnswerInstructorForm(request.POST)
+    try: 
+        courses = Course.objects.filter(instructor=request.user)
+        courses = courses.filter(pk=pk)
 
         for course in courses:
-            an_form.data["course"] = course # save current course
+            assignments = Assignment.objects.filter(course=course)
+            assignments = assignments.filter(pk=pk1)
 
-        for assignment in assignments:
-            an_form.data["assignment"] = assignment
+        an_form = AnswerInstructorForm()
 
-        if "questionCount" in request.POST:
-            count = an_form.data["questionCount"]  
-        
-        count = int(count)
-        # save each answer 1 at a time
-        for i in range(1, count+1):
-            an_form.data["correct_ans"] = an_form.data["q"+str(i)]
-            an_form.data["question_no"] = i   
+        if request.method == 'POST':
+            request.POST = request.POST.copy() # copy post and make it mutable
+            an_form = AnswerInstructorForm(request.POST)
 
-            answer = AnswerInstructor(
-                question_no=an_form.data["question_no"], 
-                correct_ans=an_form.data["correct_ans"], 
-                assignment=an_form.data["assignment"]
-            )
+            for course in courses:
+                an_form.data["course"] = course # save current course
 
-            if an_form.is_valid():
-                answer.save()            
-       
-        if an_form.is_valid():
             for assignment in assignments:
-                assignment.num_q = count
-                assignment.save()
-            return redirect('instructor:course_detail', pk=pk)
+                an_form.data["assignment"] = assignment
 
-    return render(request, 'instructor/addAnswer.html', {'pk': pk,
-                                                          'pk1': pk1,  
-                                                          'an_form': an_form,
-                                                          'courses': courses,
-                                                          'assignments': assignments
+            if "questionCount" in request.POST:
+                count = an_form.data["questionCount"]  
+            
+            count = int(count)
+            # save each answer 1 at a time
+            for i in range(1, count+1):
+                an_form.data["correct_ans"] = an_form.data["q"+str(i)]
+                an_form.data["question_no"] = i   
+
+                answer = AnswerInstructor(
+                    question_no=an_form.data["question_no"], 
+                    correct_ans=an_form.data["correct_ans"], 
+                    assignment=an_form.data["assignment"]
+                )
+
+                if an_form.is_valid():
+                    answer.save()            
+        
+            if an_form.is_valid():
+                for assignment in assignments:
+                    assignment.num_q = count
+                    assignment.save()
+                return redirect('instructor:course_detail', pk=pk)
+
+        return render(request, 'instructor/addAnswer.html', {'pk': pk,
+                                                            'pk1': pk1,  
+                                                            'an_form': an_form,
+                                                            'courses': courses,
+                                                            'assignments': assignments
                                                                             })
+    except Exception as ex:
+        print(ex)
+        return HttpResponseRedirect(reverse_lazy('instructor:instructor'))
 
 @login_required()
 def grades(request, pk):
@@ -217,17 +235,21 @@ def grades(request, pk):
         request.user.is_superuser:
             return HttpResponseForbidden()
 
-    courses = Course.objects.filter(instructor=request.user)
-    courses = courses.filter(pk=pk)
-    for course in courses:
-        assignments = Assignment.objects.filter(course=course)
-    click_on_course = False
-            
-    return render(request, 'instructor/gradeInstructor.html', {'pk': pk,
-                                                     'click_on_course': click_on_course, 
-                                                     'courses': courses,
-                                                     'assignments': assignments
+    try: 
+        courses = Course.objects.filter(instructor=request.user)
+        courses = courses.filter(pk=pk)
+        for course in courses:
+            assignments = Assignment.objects.filter(course=course)
+        click_on_course = False
+                
+        return render(request, 'instructor/gradeInstructor.html', {'pk': pk,
+                                                        'click_on_course': click_on_course, 
+                                                        'courses': courses,
+                                                        'assignments': assignments
                                                                             })
+    except Exception as ex:
+        print(ex)
+        return HttpResponseRedirect(reverse_lazy('instructor:instructor'))
 
 @login_required()
 def grades_specific(request, pk, pk1):
@@ -236,34 +258,34 @@ def grades_specific(request, pk, pk1):
         request.user.is_superuser:
             return HttpResponseForbidden()
 
-    # all the courses under this instructor
-    courses = Course.objects.filter(instructor=request.user)
-    courses = courses.filter(pk=pk)
-
-    # all the asignments under this this courseID
-    for course in courses:
-        assignments = Assignment.objects.filter(course=course)
-        this_homework = assignments.get(pk=pk1)
-    click_on_course = True
-
-    # if instructor submitted answers
-    answerKey = AnswerInstructor.objects.filter(assignment=this_homework)
-    if len(answerKey) == 0:
-        answerKey = False
-
-    passed = True
-    if this_homework.deadline.replace(tzinfo=None) >= datetime.today():
-        passed = False
-
-    # all the students who are registerd in this course
-    students = RegisterCourse.objects.filter(course=course)   
-
     
     scores = []
     correct_lst = []
     total = []
     submitted = []
     try:
+        # all the courses under this instructor
+        courses = Course.objects.filter(instructor=request.user)
+        courses = courses.filter(pk=pk)
+
+        # all the asignments under this this courseID
+        for course in courses:
+            assignments = Assignment.objects.filter(course=course)
+            this_homework = assignments.get(pk=pk1)
+        click_on_course = True
+
+        # if instructor submitted answers
+        answerKey = AnswerInstructor.objects.filter(assignment=this_homework)
+        if len(answerKey) == 0:
+            answerKey = False
+
+        passed = True
+        if this_homework.deadline.replace(tzinfo=None) >= datetime.today():
+            passed = False
+
+        # all the students who are registerd in this course
+        students = RegisterCourse.objects.filter(course=course)   
+        
         # loop each assignment
         for student in students:
             score = 0

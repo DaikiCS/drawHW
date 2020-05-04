@@ -46,24 +46,6 @@ def course_detail(request, pk):
     if request.user.is_student == False or \
         request.user.is_superuser:
             return HttpResponseForbidden()
-
-    exist_lst = []
-    name_lst = []
-    course = RegisterCourse.objects.get(course__pk=pk, student=request.user)
-    assignments = Assignment.objects.filter(course=course.course)
-    answer_exist = AnswerStudent.objects.filter(student=request.user)
-
-    for answer in answer_exist:
-        name = str(answer.assignment)
-        name = (name.replace(name[:1], ''))
-        exist_lst.append(name)
-
-    for assignment in assignments:
-        for i in range(len(exist_lst)):
-            if exist_lst[i] == assignment.name:
-                name = str(assignment.name)
-                name_lst.append(name)
-                break
     
     try: 
         course = RegisterCourse.objects.get(course__pk=pk, student=request.user)
@@ -74,8 +56,7 @@ def course_detail(request, pk):
 
     return render(request, 'student/class.html', {'course': course.course,
                                                   'assignments': assignments,
-                                                  'pk': pk,
-                                                  'name_lst': name_lst
+                                                  'pk': pk
                                                                             })
 
 def submit_answer(request, pk, pk1):
@@ -86,28 +67,27 @@ def submit_answer(request, pk, pk1):
 
     exist_lst = []
     name_lst = []
-    course = RegisterCourse.objects.get(course__pk=pk, student=request.user)
-    assignments = Assignment.objects.filter(course=course.course)
-    answer_exist = AnswerStudent.objects.filter(student=request.user)
+    answerKey = True
+    past_due = False
+    an_form = AnswerStudentForm()
 
-    for answer in answer_exist:
-        name = str(answer.assignment)
-        name = (name.replace(name[:1], ''))
-        exist_lst.append(name)
+    try: 
+        # check if answer is submitted
+        course = RegisterCourse.objects.get(course__pk=pk, student=request.user)
+        assignment = Assignment.objects.get(course=course.course, pk=pk1)
+        answer_exist = AnswerStudent.objects.filter(student=request.user, assignment=assignment)
 
-    for assignment in assignments:
+        for answer in answer_exist:
+            name = str(answer.assignment)
+            name = (name.replace(name[:1], ''))
+            exist_lst.append(name)
+
         for i in range(len(exist_lst)):
             if exist_lst[i] == assignment.name:
                 name = str(assignment.name)
                 name_lst.append(name)
                 break
 
-
-    answerKey = True
-    past_due = False
-    an_form = AnswerStudentForm()
-
-    try: 
         course = RegisterCourse.objects.get(course__pk=pk, student=request.user)
         assignments = Assignment.objects.filter(course=course.course)
         assignment = Assignment.objects.get(pk=pk1)

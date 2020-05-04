@@ -30,13 +30,6 @@
             <ul>
                 {% for assignment in assignments %}
                     <li><a href="{% url 'student:submit_answer' pk assignment.pk %}">{{ assignment.name }} 
-                        <br> 
-                            {% for name in name_lst %}
-                                {% if assignment.name == name %} 
-                                    <label style="color:green;"> submitted </label>
-                                {% endif %}
-                            {% endfor %}
-                    </a></li>
                 {% endfor %} 
                 <li><a href="#" onclick="goBack()">Go Back</a></li>
             </ul>
