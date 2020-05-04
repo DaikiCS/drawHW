@@ -180,11 +180,6 @@ def add_answers(request, pk, pk1):
             count = an_form.data["questionCount"]  
         
         count = int(count)
-        for assignment in assignments:
-            assignment.num_q = count
-            assignment.save()
-
-        
         # save each answer 1 at a time
         for i in range(1, count+1):
             an_form.data["correct_ans"] = an_form.data["q"+str(i)]
@@ -200,6 +195,9 @@ def add_answers(request, pk, pk1):
                 answer.save()            
        
         if an_form.is_valid():
+            for assignment in assignments:
+                assignment.num_q = count
+                assignment.save()
             return redirect('instructor:course_detail', pk=pk)
 
     return render(request, 'instructor/addAnswer.html', {'pk': pk,
@@ -242,14 +240,21 @@ def grades_specific(request, pk, pk1):
         assignments = Assignment.objects.filter(course=course)
         this_homework = assignments.get(pk=pk1)
     click_on_course = True
+    # if instructor submitted answers
+    answerKey = AnswerInstructor.objects.filter(assignment=this_homework)
+    if len(answerKey) == 0:
+        answerKey = False
+    if this_homework.deadline.replace(tzinfo=None) >= datetime.today():
+        passed = False
+
     # all the students who are registerd in this course
     students = RegisterCourse.objects.filter(course=course)   
 
-    # all the students did this perticular HW
-    #st_did_this_hw = AnswerStudent.objects.filter(student=students, assignment=this_homework)
+    
     scores = []
     correct_lst = []
     total = []
+    submitted = []
     try:
         # loop each assignment
         for student in students:
@@ -257,33 +262,29 @@ def grades_specific(request, pk, pk1):
             correct = 0
             count = this_homework.num_q
             # get answer for each assignment with user
-            answer_student = AnswerStudent.objects.filter(assignment=this_homework)
+            answer_student = AnswerStudent.objects.filter(assignment=this_homework, student=student.student)
             answer_instructor = AnswerInstructor.objects.filter(assignment=this_homework)
-            print(answer_student)
-            print("afae")
-            if answer_student != None and student.student == (answer_student.filter(student=student.student))[0].student:
+      
+            if len(answer_student) != 0:
                 # answered this assignment
-                print("Hello")
                 if answer_instructor and answer_student:
+                    submitted.append("(submitted)")
                     for s, i in zip(answer_student, answer_instructor):
                         if s.correct_ans == i.correct_ans:
                             correct += 1
-                    print("no problem")
                     score = correct / count * 100
 
                     scores.append(round(score, 2))
                     total.append(count)
                     correct_lst.append(correct)
             else:
-                print("Hello1")
                 # did not answered this assignment
+                submitted.append("(not submitted)")
                 scores.append(round(score, 2))
                 total.append(count)
                 correct_lst.append(0)
-            print("end")
-            
 
-        data = zip(students, correct_lst, total, scores)
+        data = zip(students, submitted, correct_lst, total, scores)
     except Exception as ex:
         print(ex)
         return HttpResponseRedirect(reverse_lazy('instructor:instructor'))
@@ -296,5 +297,7 @@ def grades_specific(request, pk, pk1):
                                                      'courses': courses,
                                                      'assignments': assignments,
                                                      'this_homework': this_homework,
-                                                     'data': data
+                                                     'data': data,
+                                                     'answerKey': answerKey,
+                                                     'passed': passed
                                                                             })

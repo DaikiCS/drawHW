@@ -1,5 +1,5 @@
 {% extends "index.html" %}
-{% block title_tag %}Instructor Assignment Grage{% endblock %}
+{% block title_tag %}Instructor Assignment Grade{% endblock %}
 {% load static %}
 {% load widget_tweaks %}
 {% block css_tag %}
@@ -33,7 +33,7 @@
             </h3>
             <ul>
               {% for assignment in assignments %}
-                  <li><a href="{% url 'instructor:grades_specific' pk assignment.pk %}">{{ assignment.name }}</a></li>
+                  <li><a href="{% url 'instructor:grades_specific' pk assignment.pk %}">{{ assignment.name }} <br> {{ assignment.deadline }} </a></li>
               {% endfor %} 
               <li><a href="#" onclick="goBack()">Go Back</a></li>
             </ul>
@@ -46,21 +46,23 @@
                 <thead>
                   <tr>
                     <th>Student Name</th>
-                    <th>{{ this_homework.name }} <br>Raw Scores</th>
+                    <th>{{ this_homework.name }} - Deadline: {% if passed %} <label style="color:red;"> Closed </label> {% else %} <label style="color:green;"> Open </label> {% endif %}<br>Raw Scores</th>
                     <th>% Scores</th>
                   </tr>
                 </thead>
+                {% if answerKey %}
                 <tbody>
-
-                  {% for student, correct, total, score in data %}
-                        <tr>
-                            <td>{{ student.student }}</td>
-                            <td>{{ correct }}/{{ total }}</td>
-                            <td>{{ score }}</td>
-                        </tr>
+                    {% for student, submitted, correct, total, score in data %}
+                          <tr>
+                              <td>{{ student.student }} {{ submitted }} </td>
+                              <td>{{ correct }}/{{ total }}</td>
+                              <td>{{ score }}</td>
+                          </tr>
                     {% endfor %}
-                  
                 </tbody>
+                {% else %}
+                    <h3 for="duedate" style="color:red;">No AnswerKey has been submitted by Instructor:</h3>
+                  {% endif %}
             </table>
             
           {% else %}  
@@ -80,29 +82,7 @@
         }
     </script>
     <!-- script to add the answers -->
-    <script> 
-        function displayInputs()
-        {
-            var count = document.getElementById("questionCount").value;
-            if(count.length != 0 && count > 0) // check if null
-            {
-                var info = "";
-                for(var i = 1; i <= count; i++)
-                {
-                    info += `<label for="q`+i+`">Answer for question `+i+`:</label>
-                <select id="q`+i+`" name="q`+i+`">
-                    <option value="a">A</option>
-                    <option value="b">B</option>
-                    <option value="c">C</option>
-                    <option value="d">D</option>
-                </select><br>` ;
-                }
-
-                document.getElementById("inputs").innerHTML = info+"<input type='submit'>";
-            }
-            
-        }
-    </script>
+    
     
     {% block js_tag %}
         <script src="{% static 'instructor/faculty_home.js' %}"></script>

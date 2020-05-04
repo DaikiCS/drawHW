@@ -29,8 +29,16 @@
             
             <ul>
                 {% for assignment in assignments %}
-                    <li><a href="{% url 'student:submit_answer' pk assignment.pk %}">{{ assignment.name }}</a></li>
-                {% endfor %}
+                    <li><a href="{% url 'student:submit_answer' pk assignment.pk %}">{{ assignment.name }} 
+                        <br> 
+                            {% for name in name_lst %}
+                                {% if assignment.name == name %} 
+                                    <label style="color:green;"> submitted </label>
+                                {% endif %}
+                            {% endfor %}
+                    </a></li>
+                            
+                {% endfor %} 
             </ul>
         </div>
         <div id="info">
@@ -43,7 +51,11 @@
 
             <a href="{{ assignment.pdf.url }}" target="_blank"><button>Download Assignment</button></a> <br><br> <!--this button to download pdf in new tab-->
 
+            {% if  answerKey == False %}
+                <h3 for="duedate" style="color:red;">No AnswerKey has been submitted by Instructor:</h3>
+            {% endif %}
             {% if past_due == False %}
+            {% if answerKey == True %}
                 <button onclick="displayInputs()" id="displayB">Submit Answer</button> <!--dispaly input for answers-->
                 <br>
 
@@ -53,6 +65,7 @@
 
                     </p>
                 </form>
+            {% endif %}
             {% endif %}
         </div>
     </div>

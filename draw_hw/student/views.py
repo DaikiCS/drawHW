@@ -47,6 +47,25 @@ def course_detail(request, pk):
         request.user.is_superuser:
             return HttpResponseForbidden()
 
+    exist_lst = []
+    name_lst = []
+    course = RegisterCourse.objects.get(course__pk=pk, student=request.user)
+    assignments = Assignment.objects.filter(course=course.course)
+    answer_exist = AnswerStudent.objects.filter(student=request.user)
+    for answer in answer_exist:
+        name = str(answer.assignment)
+        name = (name.replace(name[:1], ''))
+        print(name)
+        exist_lst.append(name)
+    for assignment in assignments:
+        print(assignment.name)
+        for i in range(len(exist_lst)):
+            if exist_lst[i] == assignment.name:
+                name = str(assignment.name)
+                name_lst.append(name)
+                break
+    
+
     try: 
         course = RegisterCourse.objects.get(course__pk=pk, student=request.user)
         assignments = Assignment.objects.filter(course=course.course)
@@ -56,7 +75,8 @@ def course_detail(request, pk):
 
     return render(request, 'student/class.html', {'course': course.course,
                                                   'assignments': assignments,
-                                                  'pk': pk
+                                                  'pk': pk,
+                                                  'name_lst': name_lst
                                                                             })
 
 #
@@ -68,13 +88,37 @@ def submit_answer(request, pk, pk1):
         request.user.is_superuser:
             return HttpResponseForbidden()
 
+    exist_lst = []
+    name_lst = []
+    course = RegisterCourse.objects.get(course__pk=pk, student=request.user)
+    assignments = Assignment.objects.filter(course=course.course)
+    answer_exist = AnswerStudent.objects.filter(student=request.user)
+    for answer in answer_exist:
+        name = str(answer.assignment)
+        name = (name.replace(name[:1], ''))
+        print(name)
+        exist_lst.append(name)
+    for assignment in assignments:
+        print(assignment.name)
+        for i in range(len(exist_lst)):
+            if exist_lst[i] == assignment.name:
+                name = str(assignment.name)
+                name_lst.append(name)
+                break
+
+
+    answerKey = True
     past_due = False
     an_form = AnswerStudentForm()
 
     try: 
-        course = RegisterCourse.objects.get(course__pk=pk)
+        course = RegisterCourse.objects.get(course__pk=pk, student=request.user)
         assignments = Assignment.objects.filter(course=course.course)
         assignment = Assignment.objects.get(pk=pk1)
+        answer_instructor_exist = AnswerInstructor.objects.filter(assignment=assignment)
+        
+        if len(answer_instructor_exist) == 0:
+            answerKey = False
 
         if assignment.deadline.replace(tzinfo=None) < datetime.today():
             past_due = True
@@ -114,7 +158,9 @@ def submit_answer(request, pk, pk1):
                                                     'num_q': assignment.num_q,
                                                     'pk': pk,
                                                     'pk1': pk1,
-                                                    'past_due': past_due
+                                                    'past_due': past_due,
+                                                    'answerKey': answerKey,
+                                                    'name_lst': name_lst
                                                                             })
 
 def get_grade(request, pk):
@@ -143,6 +189,7 @@ def get_grade(request, pk):
             answer_instructor = AnswerInstructor.objects.filter(assignment=assignment)
 
             if assignment.deadline.replace(tzinfo=None) >= datetime.today():
+                passed = False
                 # submitted on time
                 if answer_instructor and answer_student:
                     for s, i in zip(answer_student, answer_instructor):
@@ -181,5 +228,6 @@ def get_grade(request, pk):
     return render(request, 'student/gradeStudent.html', {'pk': pk,
                                                          'course': course,
                                                          'assignments': assignments,
+                                                         'passed': passed
                                                         })
                                                                             
