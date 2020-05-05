@@ -151,9 +151,9 @@ def get_grade(request, pk):
     hws = []
     try: 
         # get a course
-        course = Course.objects.get(pk=pk)
+        course = RegisterCourse.objects.get(course__pk=pk, student=request.user)
         # get all the assignments
-        assignments = Assignment.objects.filter(course=course)
+        assignments = Assignment.objects.filter(course=course.course)
 
         passed = True
 
@@ -217,7 +217,7 @@ def get_grade(request, pk):
         total_score = None
 
     return render(request, 'student/gradeStudent.html', {'pk': pk,
-                                                         'course': course,
+                                                         'course': course.course,
                                                          'assignments': assignments,
                                                          'passed': passed,
                                                          'total_score': total_score
