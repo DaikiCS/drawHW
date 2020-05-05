@@ -16,6 +16,9 @@ class Assignment(models.Model):
     pdf = models.FileField(upload_to="pdfs/")
     num_q = models.IntegerField(default=0)
 
+    class Meta:
+        unique_together = (('name', 'course'),)
+
     def __str__(self):
         return "@{}".format(self.name)
 

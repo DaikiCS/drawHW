@@ -52,8 +52,8 @@
                 <label for="duedate">Due Date:</label> 
                 <br>
 
-                <input type="date" id="duedate" name="duedate" placeholder="yyyy-mm-dd">
-                <input type="text" id="duetime" name="duetime" placeholder="Time" autocomplete="off">
+                <input type="date" id="duedate" name="duedate" placeholder="yyyy-mm-dd" required>
+                <input type="text" id="duetime" name="duetime" placeholder="Time" autocomplete="off" required>
                 <br>
 
                 {% render_field a_form.pdf type="file" id="upload" name="upload" accept="application/pdf" attr="required" %}
@@ -72,6 +72,12 @@
           window.history.back();
         }
     </script>
+
+    {% if a_form.errors %}
+        <script>
+            alert("HW with this name already exists.");
+        </script>
+    {% endif %}
     
     {% block js_tag %}
         <script src="http://cdn.jsdelivr.net/timepicker.js/latest/timepicker.min.js"></script>

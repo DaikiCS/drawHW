@@ -73,6 +73,12 @@
           window.history.back();
         }
     </script>
+
+    {% if eh_form.errors %}
+    <script>
+        alert("HW with this name already exists.");
+    </script>
+    {% endif %}
     
     
     {% block js_tag %}
