@@ -213,6 +213,7 @@ def get_grade(request, pk):
     
     if len(scores) != 0:
         total_score = total_score / len(scores)
+        total_score = round(total_score, 2)
     else:
         total_score = None
 
