@@ -11,8 +11,38 @@
     <link rel="icon" href="{% static 'accounts/pic/drawHW.png' %}" type="image/x-icon">
     
 </head>
-<body>
+<body onload="startTime()">
+    <div id="ctime" style="float: right; color: white;">Wed May 4th 2020 10:08 P.M.</div><br>
     {% block body_content %}
     {% endblock %}
 </body>
+
+<script>
+
+    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    var months = ['Jan.','Feb.','March','April','May','June','July','Aug.','Sept.','Oct.','Nov.','Dec.'];
+
+    function startTime() 
+    {
+        var today = new Date();
+        var h = today.getHours();
+        var stat = h >= 12 ? "PM" : "AM";
+        h = h % 12;
+        h = h ? h : 12;
+        var m = today.getMinutes();
+        m = checkTime(m);
+        var date = days[today.getDay()] + " " + today.getDate() + " " + months[today.getMonth()] + " " + today.getFullYear() + " ";
+        
+
+        document.getElementById('ctime').innerHTML = date + h + ":" + m + " " + stat;
+        var t = setTimeout(startTime, 500);
+    }
+    function checkTime(i) 
+    {
+        if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+        return i;
+    }
+    
+</script>
+
 </html>

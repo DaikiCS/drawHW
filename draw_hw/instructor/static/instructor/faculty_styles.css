@@ -15,7 +15,7 @@ body
 {
     position: relative;
     background-color: rgba(0,0,0,0.4);
-    width: 85%;
+    width: 95%;
     min-height: 600px;
     height: fit-content;
     margin-left: auto;
@@ -154,13 +154,19 @@ hr
     margin-right: auto;
     padding-left: 15px;
     padding-right: 15px;
-    height: 100%;
+    height: 40px;
+    line-height: 40px;
     overflow: hidden;
 
     margin-bottom: 10px;
     
-    border-radius: 15px;
+    border-radius: 3px;
     
+}
+
+#name h3
+{
+    margin: 0px;
 }
 
 .signout
@@ -300,6 +306,10 @@ button:hover, input[type="submit"]:hover
         font-size: medium;
     }
 
+    h1
+    {
+        font-size: large;
+    }
 }
 #footer
 {
